@@ -1,4 +1,11 @@
 from PyQt5 import QtWidgets, QtCore
+import json
+
+
+def pars_json(file):
+    data = open(file).read()
+    json_data = json.loads(data)
+    return json_data
 
 
 class WindowSettings(QtWidgets.QWidget):
@@ -7,7 +14,7 @@ class WindowSettings(QtWidgets.QWidget):
         self.initUI()
 
     def initUI(self):
-
+        self.json_data = pars_json('settings/connection_settings.json')
 
         # Разметка для настроек
         self.settings_grid = QtWidgets.QGridLayout()

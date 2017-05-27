@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 from modules.my_classes.SettingsForDialect import WindowSettings
 
 
+
 class Settings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
@@ -25,6 +26,7 @@ class Settings(QtWidgets.QWidget):
 
         box.setLayout(vbox)
 
+        # print(main_box.json_data)
 
 
         # Возвращаемая обертка
