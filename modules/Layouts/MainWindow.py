@@ -45,9 +45,6 @@ class MainLayout(QtWidgets.QWidget):
 
 
 
-
-
-
         # Добавляем группированные боксы в главное окно
         self.main_layout = QtWidgets.QHBoxLayout()
 
@@ -58,7 +55,6 @@ class MainLayout(QtWidgets.QWidget):
 
 
     def on_clicked_btn(self, dialect):
-        # print('clicked ', dialect)
 
         # Делаем все кнопки диалектов активными
         for btn in self.dialect_box.dialects_obj:
