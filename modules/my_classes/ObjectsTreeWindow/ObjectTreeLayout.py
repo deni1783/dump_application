@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-
+from functools import partial
 
 
 class ObjectTree(QtWidgets.QWidget):
@@ -18,6 +18,7 @@ class ObjectTree(QtWidgets.QWidget):
 
         # Запуск дампа
         self.btn_run_creating_dump = QtWidgets.QPushButton('Run creating DUMP')
+        # self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
 
         self.vbox_obj_tree.addWidget(self.tree_widget)
         self.vbox_obj_tree.addWidget(self.btn_run_creating_dump)
@@ -28,3 +29,19 @@ class ObjectTree(QtWidgets.QWidget):
         self.box_object_tree.setAlignment(QtCore.Qt.AlignHCenter)
         self.box_object_tree.setLayout(self.vbox_obj_tree)
         # self.box_object_tree.hide()
+
+    def add_objects_to_tree(self, obj):
+
+        for d in obj:
+            database = QtWidgets.QTreeWidgetItem(self.tree_widget)
+            database.setText(0, "{}".format(d))
+            database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
+
+            for s in obj[d]:
+                schema = QtWidgets.QTreeWidgetItem(database)
+                schema.setText(0, "{}".format(s))
+                schema.setFlags(schema.flags() | QtCore.Qt.ItemIsUserCheckable)
+                schema.setCheckState(0, QtCore.Qt.Unchecked)
+
+    # def run_creating_dump(self):
+    #     print(self.tree_widget.currentItem())

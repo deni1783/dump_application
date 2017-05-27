@@ -42,6 +42,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
 
+
         # =================================================
         # Устанавливае обработчики на кнопки
         # =================================================
@@ -59,6 +60,11 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Обработчики для кнопок выбора баз данных
         self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
         self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
+
+
+        # Запуск дампа
+        # self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
+
 
         # Возвращаемая обертка
         wrap_vbox = QtWidgets.QVBoxLayout()
@@ -125,4 +131,13 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             if r.isChecked():
                 checked_radio = r
                 break
+
+        # Добавляем объекты в дерево
+        self.add_objects_to_tree(self.settings)
+
+
+
         print('Custom DB ', checked_radio.text())
+
+    # def run_creating_dump(self):
+    #     print(self.tree_widget.selectedItems())
