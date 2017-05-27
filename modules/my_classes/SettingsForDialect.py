@@ -34,7 +34,8 @@ class WindowSettings(QtWidgets.QWidget):
         self.database = QtWidgets.QLabel('DATABASE:')
         self.database_value = QtWidgets.QLabel('undefined')
 
-
+        # Создание кнопок управления настройками
+        self.btn_add_profile = QtWidgets.QPushButton('Add')
         self.btn_change_settings = QtWidgets.QPushButton('Change')
         self.btn_test_connect = QtWidgets.QPushButton('Test')
 
@@ -55,8 +56,13 @@ class WindowSettings(QtWidgets.QWidget):
         self.settings_grid.addWidget(self.database, 4, 0)
         self.settings_grid.addWidget(self.database_value, 4, 1)
 
-        self.settings_grid.addWidget(self.btn_change_settings, 0, 2)
-        self.settings_grid.addWidget(self.btn_test_connect, 1, 2)
+
+
+        # Добавление кнопок управления настройками
+        self.settings_grid.addWidget(self.btn_add_profile, 0, 2)
+        self.settings_grid.addWidget(self.btn_change_settings, 1, 2)
+        self.settings_grid.addWidget(self.btn_test_connect, 2, 2)
+
 
         # Группа настроек
         self.box_conn_settings = QtWidgets.QGroupBox('Connection settings')
