@@ -7,9 +7,9 @@ class Settings(WindowSettings):
     def __init__(self, parent=None):
         WindowSettings.__init__(self, parent)
 
-        dialect = 'postgresql'
+        self.dialect = 'postgresql'
 
-        self.settings = self.json_data[dialect]
+        self.settings = self.full_json_data[self.dialect]
 
 
         # =================================================
@@ -83,9 +83,11 @@ class Settings(WindowSettings):
         new_password = self.line_password_value.text()
         new_database = self.line_database_value.text()
 
-        print(new_profile_name
-                , new_host
-                , new_port
-                , new_user
-                , new_password
-                , new_database)
+        self.full_json_data[self.dialect][new_profile_name] = {
+            "host": new_host,
+            "port": new_port,
+            "user": new_user,
+            "password": new_password,
+            "database": new_database
+        }
+        self.write_obj_to_json_file(self.full_json_data)

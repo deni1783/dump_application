@@ -21,7 +21,7 @@ class WindowSettings(QtWidgets.QWidget):
         self.path_to_json_connecting_settings = 'settings/connection_settings.json'
 
         # Получаем объект настроек
-        self.json_data = self.pars_json(self.path_to_json_connecting_settings)
+        self.full_json_data = self.pars_json(self.path_to_json_connecting_settings)
 
 
         # Обертка для выбора профиля настроек
@@ -127,6 +127,10 @@ class WindowSettings(QtWidgets.QWidget):
         data = open(file).read()
         json_data = json.loads(data)
         return json_data
+
+
+    def write_obj_to_json_file(self, obj):
+        json.dump(obj, open(self.path_to_json_connecting_settings, 'w'), indent=2)
 
     def change_settings_values(self, obj):
         self.host_value.setText(obj['host'])
