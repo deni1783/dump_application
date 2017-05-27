@@ -28,12 +28,14 @@ class DialectsLayout(QtWidgets.QWidget):
         self.dialects_obj = {}
 
         vbox = QtWidgets.QVBoxLayout()
+        vbox.setAlignment(QtCore.Qt.AlignTop)
         for i in list_dialects:
             self.dialects_obj[i] = QtWidgets.QPushButton(i)
             vbox.addWidget(self.dialects_obj[i])
 
         out_box = QtWidgets.QGroupBox('Dialects')
         out_box.setAlignment(QtCore.Qt.AlignHCenter)
+        out_box.setMaximumWidth(180)
         out_box.setLayout(vbox)
 
         # Возвращаем в основной макет
