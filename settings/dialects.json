@@ -1,1 +1,12 @@
-{"List_of_dialects": ["GreenPlum", "PostgreSQL", "Oracle", "MySQL"]}
+{"List_of_dialects": [
+  "Oracle",
+  "MS SQL Server",
+  "Redshift",
+  "Sybase",
+  "MySQL",
+  "DB2",
+  "Teradata",
+  "PostgreSQL",
+  "GreenPlum",
+  "Netezza"
+]}
