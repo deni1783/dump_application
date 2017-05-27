@@ -5,7 +5,7 @@ from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import Connectio
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 
 
-class SettingsFull(ConnectionSettings, DumpSettings):
+class Settings(ConnectionSettings, DumpSettings):
     def __init__(self, parent=None):
         ConnectionSettings.__init__(self, parent)
         DumpSettings.__init__(self, parent)

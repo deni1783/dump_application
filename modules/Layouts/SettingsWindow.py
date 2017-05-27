@@ -31,7 +31,7 @@ class SettingsLayout(QtWidgets.QWidget):
         elif dialect_name.lower() == 'teradata':
             wrap_vbox = teradata.Settings().out_window
         elif dialect_name.lower() == 'postgresql':
-            wrap_vbox = postgresql.SettingsFull().out_window
+            wrap_vbox = postgresql.Settings().out_window
         elif dialect_name.lower() == 'greenplum':
             wrap_vbox = greenplum.Settings().out_window
         elif dialect_name.lower() == 'netezza':
