@@ -37,7 +37,7 @@ class SettingsLayout(QtWidgets.QWidget):
         elif dialect_name.lower() == 'netezza':
             wrap_vbox = netezza.Settings().out_window
 
-        #     Если нет класса дня диалекта возвразаем пустую обертку
+        #     Если нет класса дня диалекта возвращаем пустую обертку
         else:
             wrap_vbox = QtWidgets.QVBoxLayout()
             err_lbl = QtWidgets.QLabel('Unsupported dialect: ' + dialect_name)

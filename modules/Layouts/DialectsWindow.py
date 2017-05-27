@@ -35,6 +35,12 @@ class DialectsLayout(QtWidgets.QWidget):
 
         out_box = QtWidgets.QGroupBox('Dialects')
         out_box.setAlignment(QtCore.Qt.AlignHCenter)
+        out_box.setStyleSheet('QGroupBox {'
+                              'font-size: 14px;'
+                              'font-weight: bold;'
+                              'padding-top: 30px;'
+                              'margin-top:10px'
+                              '}')
         out_box.setMaximumWidth(180)
         out_box.setLayout(vbox)
 
