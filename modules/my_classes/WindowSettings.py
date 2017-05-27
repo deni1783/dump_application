@@ -12,7 +12,20 @@ class WindowSettings(QtWidgets.QWidget):
         # Получаем объект настроек
         self.json_data = self.pars_json(self.path_to_json_connecting_settings)
 
-        # Обортка для настроек
+
+        # Обертка для выбора профиля настроек
+        self.lbl_profile = QtWidgets.QLabel('Selected profile is')
+        self.combo_box_list_profiles = QtWidgets.QComboBox()
+        self.combo_box_list_profiles.setFixedWidth(150)
+
+        self.hbox_profile = QtWidgets.QHBoxLayout()
+        self.hbox_profile.setAlignment(QtCore.Qt.AlignHCenter)
+        self.hbox_profile.addWidget(self.lbl_profile)
+        self.hbox_profile.addWidget(self.combo_box_list_profiles)
+
+
+
+        # Обертка для настроек
         self.settings_grid = QtWidgets.QGridLayout()
 
 
@@ -50,6 +63,11 @@ class WindowSettings(QtWidgets.QWidget):
         self.settings_grid.addWidget(self.database_value, 4, 1)
 
 
+        # Общая обертка с профилем и настройками подключения
+        self.vbox_profile_plus_settings = QtWidgets.QVBoxLayout()
+        self.vbox_profile_plus_settings.addLayout(self.hbox_profile)
+        self.vbox_profile_plus_settings.addLayout(self.settings_grid)
+
         # Кнопки управления
 
         # Создание кнопок управления настройками
@@ -76,7 +94,7 @@ class WindowSettings(QtWidgets.QWidget):
         # Обертка для настроек подключения
         # включает отображение настроек и кнопок управления ими
         self.hbox_wrap_settings = QtWidgets.QHBoxLayout()
-        self.hbox_wrap_settings.addLayout(self.settings_grid)
+        self.hbox_wrap_settings.addLayout(self.vbox_profile_plus_settings)
         self.hbox_wrap_settings.addLayout(self.vbox_btns_change_settings)
 
 
@@ -99,7 +117,7 @@ class WindowSettings(QtWidgets.QWidget):
         json_data = json.loads(data)
         return json_data
 
-    def change_value(self, obj):
+    def change_settings_values(self, obj):
         self.host_value.setText(obj['host'])
         self.port_value.setText(obj['port'])
         self.user_value.setText(obj['user'])

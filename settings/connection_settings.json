@@ -86,6 +86,14 @@
       "user": "qa",
       "password": "qa",
       "database": "postgres"
+    },
+
+    "test_profile": {
+      "host": "test",
+      "port": "test",
+      "user": "test",
+      "password": "qa",
+      "database": "postgres"
     }
   },
 

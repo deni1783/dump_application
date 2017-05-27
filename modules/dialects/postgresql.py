@@ -7,19 +7,42 @@ class Settings(WindowSettings):
     def __init__(self, parent=None):
         WindowSettings.__init__(self, parent)
 
-        settings = self.json_data['postgresql']
+        self.settings = self.json_data['postgresql']
 
-        profile = settings['default']
+
+        # =================================================
+        # Настройка профилей
+        # =================================================
+
+        # Получаем список сохраненних профилей из настроек
+        list_profiles = []
+        for prof in self.settings:
+            list_profiles.append(prof)
+
+        # Заполняем список доступными профилями
+        self.combo_box_list_profiles.addItems(list_profiles)
+
+
+        # Получаем изначально активированный профиль
+        activated_profile = self.combo_box_list_profiles.currentText()
+
+        # Устанавливаем значения профиля
+        profile = self.settings[activated_profile]
 
         # изменяем значения настроек подключения
-        self.change_value(profile)
+        self.change_settings_values(profile)
+
+
+
+
+
 
         # Устанавливае обработчики на кнопки управления настройками
         self.btn_add_profile.clicked.connect(partial(self.add_profile))
         self.btn_change_settings.clicked.connect(partial(self.change_profile_settings))
         self.btn_test_connect.clicked.connect(partial(self.test_btn_clicked, 'test'))
 
-
+        self.combo_box_list_profiles.activated[str].connect(partial(self.change_profile))
 
 
 
@@ -41,3 +64,10 @@ class Settings(WindowSettings):
 
     def test_btn_clicked(self, txt):
         print('test connection', txt)
+
+    def change_profile(self, profile_name):
+        # Получаем новые значения
+        new_profile = self.settings[profile_name]
+
+        # Заполняем новыми значениями
+        self.change_settings_values(new_profile)
