@@ -48,7 +48,7 @@ class Settings(WindowSettings):
 
         self.combo_box_list_profiles.activated[str].connect(partial(self.change_profile))
 
-        # self.btn_save_profile.clicked.connect(partial(self.save_new_profile))
+        self.btn_save_profile.clicked.connect(partial(self.save_new_profile))
 
 
         # Возвращаемая обертка
@@ -61,61 +61,6 @@ class Settings(WindowSettings):
         self.out_window = wrap_vbox
 
 
-    def add_profile(self):
-
-        # Создание виджетов
-
-        lbl_new_profile_name = QtWidgets.QLabel('New profile name')
-        self.line_new_profile_name_value = QtWidgets.QLineEdit()
-        self.line_host_value = QtWidgets.QLineEdit()
-        self.line_port_value = QtWidgets.QLineEdit()
-        self.line_user_value = QtWidgets.QLineEdit()
-        self.line_password_value = QtWidgets.QLineEdit()
-        self.line_database_value = QtWidgets.QLineEdit()
-
-        # Кнопка сохранить
-        self.btn_save_profile = QtWidgets.QPushButton('Save and Exit')
-        self.btn_save_profile.setFixedWidth(150)
-        self.btn_save_profile.clicked.connect(partial(self.save_new_profile))
-
-
-        # Создание и заполние представления
-        profile_layout = QtWidgets.QGridLayout()
-        profile_layout.setAlignment(QtCore.Qt.AlignTop)
-
-
-        profile_layout.addWidget(lbl_new_profile_name, 0, 0)
-        profile_layout.addWidget(self.line_new_profile_name_value, 0, 1)
-
-        profile_layout.addWidget(self.host, 1, 0)
-        profile_layout.addWidget(self.line_host_value, 1, 1)
-
-        profile_layout.addWidget(self.port, 2, 0)
-        profile_layout.addWidget(self.line_port_value, 2, 1)
-
-        profile_layout.addWidget(self.user, 3, 0)
-        profile_layout.addWidget(self.line_user_value, 3, 1)
-
-        profile_layout.addWidget(self.password, 4, 0)
-        profile_layout.addWidget(self.line_password_value, 4, 1)
-
-        profile_layout.addWidget(self.database, 5, 0)
-        profile_layout.addWidget(self.line_database_value, 5, 1)
-
-        profile_layout.addWidget(self.btn_save_profile, 6, 0, 1, 0)
-
-
-        self.add_profile_window = QtWidgets.QWidget(parent=self.box_conn_settings)
-        self.add_profile_window.setWindowFlags(QtCore.Qt.Tool)
-        self.add_profile_window.setWindowTitle('New profile')
-
-        self.add_profile_window.setLayout(profile_layout)
-        self.add_profile_window.setMinimumSize(200, 200)
-
-
-        self.add_profile_window.show()
-
-        print('add profile')
 
     def change_profile_settings(self):
         print('change settings')
@@ -131,4 +76,16 @@ class Settings(WindowSettings):
         self.change_settings_values(new_profile)
 
     def save_new_profile(self):
-        print('clicked save')
+        new_profile_name = self.line_new_profile_name_value.text()
+        new_host = self.line_host_value.text()
+        new_port = self.line_port_value.text()
+        new_user = self.line_user_value.text()
+        new_password = self.line_password_value.text()
+        new_database = self.line_database_value.text()
+
+        print(new_profile_name
+                , new_host
+                , new_port
+                , new_user
+                , new_password
+                , new_database)

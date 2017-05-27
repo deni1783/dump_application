@@ -7,6 +7,17 @@ class WindowSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+        # Кнопка сохранить выбранных профиль
+        self.btn_save_profile = QtWidgets.QPushButton('Save and Exit')
+        self.btn_save_profile.setFixedWidth(150)
+
+        self.line_new_profile_name_value = QtWidgets.QLineEdit()
+        self.line_host_value = QtWidgets.QLineEdit()
+        self.line_port_value = QtWidgets.QLineEdit()
+        self.line_user_value = QtWidgets.QLineEdit()
+        self.line_password_value = QtWidgets.QLineEdit()
+        self.line_database_value = QtWidgets.QLineEdit()
+
         self.path_to_json_connecting_settings = 'settings/connection_settings.json'
 
         # Получаем объект настроек
@@ -123,3 +134,50 @@ class WindowSettings(QtWidgets.QWidget):
         self.user_value.setText(obj['user'])
         self.password_value.setText(obj['password'])
         self.database_value.setText(obj['database'])
+
+    def add_profile(self):
+
+        # Создание виджетов
+        lbl_new_profile_name = QtWidgets.QLabel('New profile name')
+
+        host = QtWidgets.QLabel('HOST:')
+        port = QtWidgets.QLabel('PORT:')
+        user = QtWidgets.QLabel('USER:')
+        password = QtWidgets.QLabel('PASSWORD:')
+        database = QtWidgets.QLabel('DATABASE:')
+
+        # Создание и заполние представления
+        self.profile_layout = QtWidgets.QGridLayout()
+        self.profile_layout.setAlignment(QtCore.Qt.AlignTop)
+
+
+        self.profile_layout.addWidget(lbl_new_profile_name, 0, 0)
+        self.profile_layout.addWidget(self.line_new_profile_name_value, 0, 1)
+
+        self.profile_layout.addWidget(host, 1, 0)
+        self.profile_layout.addWidget(self.line_host_value, 1, 1)
+
+        self.profile_layout.addWidget(port, 2, 0)
+        self.profile_layout.addWidget(self.line_port_value, 2, 1)
+
+        self.profile_layout.addWidget(user, 3, 0)
+        self.profile_layout.addWidget(self.line_user_value, 3, 1)
+
+        self.profile_layout.addWidget(password, 4, 0)
+        self.profile_layout.addWidget(self.line_password_value, 4, 1)
+
+        self.profile_layout.addWidget(database, 5, 0)
+        self.profile_layout.addWidget(self.line_database_value, 5, 1)
+
+        self.profile_layout.addWidget(self.btn_save_profile, 6, 0, 1, 0)
+
+
+        self.add_profile_window = QtWidgets.QWidget(parent=self.box_conn_settings)
+        self.add_profile_window.setWindowFlags(QtCore.Qt.Tool)
+        self.add_profile_window.setWindowTitle('New profile')
+
+        self.add_profile_window.setLayout(self.profile_layout)
+        self.add_profile_window.setMinimumSize(200, 200)
+
+
+        self.add_profile_window.show()
