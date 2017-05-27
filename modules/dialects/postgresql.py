@@ -13,6 +13,7 @@ class Settings(QtWidgets.QWidget):
         main_box = WindowSettings()
 
 
+
         vbox = QtWidgets.QVBoxLayout()
 
 
