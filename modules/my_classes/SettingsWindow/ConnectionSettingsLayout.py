@@ -3,7 +3,7 @@ import json
 
 
 
-class WindowSettings(QtWidgets.QWidget):
+class ConnectionSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
@@ -120,10 +120,6 @@ class WindowSettings(QtWidgets.QWidget):
         self.box_conn_settings.setAlignment(QtCore.Qt.AlignHCenter)
         self.box_conn_settings.setLayout(self.hbox_wrap_settings)
 
-
-        # Группа выбора тыпа дампа
-        self.box_type_dump = QtWidgets.QGroupBox('Type of the dump')
-        self.box_type_dump.setAlignment(QtCore.Qt.AlignHCenter)
 
 
     @staticmethod

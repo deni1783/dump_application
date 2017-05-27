@@ -1,11 +1,14 @@
-from PyQt5 import QtWidgets, QtCore
-from modules.my_classes.WindowSettings import WindowSettings
 from functools import partial
+from PyQt5 import QtWidgets
+
+from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
+from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 
 
-class Settings(WindowSettings):
+class SettingsFull(ConnectionSettings, DumpSettings):
     def __init__(self, parent=None):
-        WindowSettings.__init__(self, parent)
+        ConnectionSettings.__init__(self, parent)
+        DumpSettings.__init__(self, parent)
 
         self.dialect = 'postgresql'
 
