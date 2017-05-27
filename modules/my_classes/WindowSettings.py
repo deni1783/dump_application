@@ -3,8 +3,6 @@ import json
 
 
 
-
-
 class WindowSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
@@ -14,7 +12,7 @@ class WindowSettings(QtWidgets.QWidget):
         # Получаем объект настроек
         self.json_data = self.pars_json(self.path_to_json_connecting_settings)
 
-        # Разметка для настроек
+        # Обортка для настроек
         self.settings_grid = QtWidgets.QGridLayout()
 
 
@@ -34,11 +32,6 @@ class WindowSettings(QtWidgets.QWidget):
         self.database = QtWidgets.QLabel('DATABASE:')
         self.database_value = QtWidgets.QLabel('undefined')
 
-        # Создание кнопок управления настройками
-        self.btn_add_profile = QtWidgets.QPushButton('Add')
-        self.btn_change_settings = QtWidgets.QPushButton('Change')
-        self.btn_test_connect = QtWidgets.QPushButton('Test')
-
 
         # Добавляем надписи в разметку
         self.settings_grid.addWidget(self.host, 0, 0)
@@ -57,19 +50,45 @@ class WindowSettings(QtWidgets.QWidget):
         self.settings_grid.addWidget(self.database_value, 4, 1)
 
 
+        # Кнопки управления
 
-        # Добавление кнопок управления настройками
-        self.settings_grid.addWidget(self.btn_add_profile, 0, 2)
-        self.settings_grid.addWidget(self.btn_change_settings, 1, 2)
-        self.settings_grid.addWidget(self.btn_test_connect, 2, 2)
+        # Создание кнопок управления настройками
+        self.btn_add_profile = QtWidgets.QPushButton('Add')
+        self.btn_change_settings = QtWidgets.QPushButton('Change')
+        self.btn_test_connect = QtWidgets.QPushButton('Test')
+
+        # Изменение вида кнопок
+        self.btn_add_profile.setFixedWidth(100)
+        self.btn_change_settings.setFixedWidth(100)
+        self.btn_test_connect.setFixedWidth(100)
+
+
+        # Обертка для кнопок управления настройками
+        self.vbox_btns_change_settings = QtWidgets.QVBoxLayout()
+        self.vbox_btns_change_settings.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignRight)
+
+        self.vbox_btns_change_settings.addWidget(self.btn_add_profile)
+        self.vbox_btns_change_settings.addWidget(self.btn_change_settings)
+        self.vbox_btns_change_settings.addWidget(self.btn_test_connect)
+
+
+
+        # Обертка для настроек подключения
+        # включает отображение настроек и кнопок управления ими
+        self.hbox_wrap_settings = QtWidgets.QHBoxLayout()
+        self.hbox_wrap_settings.addLayout(self.settings_grid)
+        self.hbox_wrap_settings.addLayout(self.vbox_btns_change_settings)
+
+
 
 
         # Группа настроек
         self.box_conn_settings = QtWidgets.QGroupBox('Connection settings')
         self.box_conn_settings.setAlignment(QtCore.Qt.AlignHCenter)
-        self.box_conn_settings.setLayout(self.settings_grid)
+        self.box_conn_settings.setLayout(self.hbox_wrap_settings)
 
 
+        # Группа выбора тыпа дампа
         self.box_type_dump = QtWidgets.QGroupBox('Type of the dump')
         self.box_type_dump.setAlignment(QtCore.Qt.AlignHCenter)
 

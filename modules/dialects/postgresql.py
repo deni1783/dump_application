@@ -14,6 +14,8 @@ class Settings(WindowSettings):
         # изменяем значения
         self.change_value(profile)
 
+        self.btn_test_connect.clicked.connect(self.test_btn_clicked)
+
 
 
 
@@ -28,4 +30,5 @@ class Settings(WindowSettings):
         self.out_window = wrap_vbox
 
 
-
+    def test_btn_clicked(self):
+        print('clicked')
