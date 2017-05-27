@@ -2,19 +2,17 @@ from PyQt5 import QtWidgets, QtCore
 import json
 
 
-def pars_json(file):
-    data = open(file).read()
-    json_data = json.loads(data)
-    return json_data
+
 
 
 class WindowSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self.initUI()
 
-    def initUI(self):
-        self.json_data = pars_json('settings/connection_settings.json')
+        self.path_to_json_conneting_settings = 'settings/connection_settings.json'
+
+        # Получаем объект настроек
+        self.json_data = self.pars_json(self.path_to_json_conneting_settings)
 
         # Разметка для настроек
         self.settings_grid = QtWidgets.QGridLayout()
@@ -61,3 +59,10 @@ class WindowSettings(QtWidgets.QWidget):
 
         self.box_type_dump = QtWidgets.QGroupBox('Type of the dump')
         self.box_type_dump.setAlignment(QtCore.Qt.AlignHCenter)
+
+
+    @staticmethod
+    def pars_json(file):
+        data = open(file).read()
+        json_data = json.loads(data)
+        return json_data
