@@ -14,6 +14,8 @@ class SettingsLayout(QtWidgets.QWidget):
             wrap_vbox = postgresql.Settings().out_window
         elif dialect_name.lower() == 'greenplum':
             wrap_vbox = greenplum.Settings().out_window
+        elif dialect_name.lower() == 'oracle':
+            wrap_vbox = greenplum.Settings().out_window
 
         out_box = QtWidgets.QGroupBox(dialect_name)
         out_box.setAlignment(QtCore.Qt.AlignHCenter)
