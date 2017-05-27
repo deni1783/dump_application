@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from modules.my_classes.SettingsForDialect import WindowSettings
+from modules.my_classes.WindowSettings import WindowSettings
 
 
 
