@@ -4,11 +4,14 @@ from PyQt5 import QtWidgets
 from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 
+from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
 
-class Settings(ConnectionSettings, DumpSettings):
+
+class Settings(ConnectionSettings, DumpSettings, ObjectTree):
     def __init__(self, parent=None):
         ConnectionSettings.__init__(self, parent)
         DumpSettings.__init__(self, parent)
+        ObjectTree.__init__(self, parent)
 
         self.dialect = 'postgresql'
 
@@ -53,6 +56,9 @@ class Settings(ConnectionSettings, DumpSettings):
 
         self.btn_save_profile.clicked.connect(partial(self.save_new_profile))
 
+        # Обработчики для кнопок выбора баз данных
+        self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
+        self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
 
         # Возвращаемая обертка
         wrap_vbox = QtWidgets.QVBoxLayout()
@@ -60,8 +66,12 @@ class Settings(ConnectionSettings, DumpSettings):
         wrap_vbox.addWidget(self.box_type_dump)
 
 
+        wrap_full = QtWidgets.QHBoxLayout()
+        wrap_full.addLayout(wrap_vbox)
+        wrap_full.addWidget(self.box_object_tree)
+
         # Возвращаем в основной макет
-        self.out_window = wrap_vbox
+        self.out_window = wrap_full
 
 
 
@@ -96,3 +106,23 @@ class Settings(ConnectionSettings, DumpSettings):
         self.write_obj_to_json_file(self.full_json_data)
         self.combo_box_list_profiles.addItem(new_profile_name)
         self.add_profile_window.close()
+
+
+    def selected_default_databases(self):
+        checked_radio = None
+        # Находим выбранный тип дампа
+        for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
+            if r.isChecked():
+                checked_radio = r
+                break
+        print('Default DB', checked_radio.text())
+
+
+    def selected_custom_databases(self):
+        checked_radio = None
+        # Находим выбранный тип дампа
+        for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
+            if r.isChecked():
+                checked_radio = r
+                break
+        print('Custom DB ', checked_radio.text())

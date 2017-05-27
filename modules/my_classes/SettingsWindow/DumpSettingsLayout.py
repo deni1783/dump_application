@@ -58,4 +58,4 @@ class DumpSettings(QtWidgets.QWidget):
         self.box_type_dump.setAlignment(QtCore.Qt.AlignHCenter)
         self.box_type_dump.setLayout(main_wrap_hbox)
 
-        self.box_type_dump.setFixedHeight(150)
+        # self.box_type_dump.setFixedHeight(150)

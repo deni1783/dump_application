@@ -9,7 +9,7 @@ class ConnectionSettings(QtWidgets.QWidget):
 
         # Кнопка сохранить выбранных профиль
         self.btn_save_profile = QtWidgets.QPushButton('Save and Exit')
-        self.btn_save_profile.setFixedWidth(150)
+        # self.btn_save_profile.setFixedWidth(150)
         self.btn_save_profile.setDisabled(True)
 
         self.line_new_profile_name_value = QtWidgets.QLineEdit()
@@ -181,7 +181,7 @@ class ConnectionSettings(QtWidgets.QWidget):
         self.add_profile_window.setWindowTitle('New profile')
 
         self.add_profile_window.setLayout(self.profile_layout)
-        self.add_profile_window.setMinimumSize(200, 200)
+        # self.add_profile_window.setMinimumSize(200, 200)
 
         # self.line_new_profile_name_value
 
