@@ -91,3 +91,5 @@ class Settings(WindowSettings):
             "database": new_database
         }
         self.write_obj_to_json_file(self.full_json_data)
+        self.combo_box_list_profiles.addItem(new_profile_name)
+        self.add_profile_window.close()

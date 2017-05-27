@@ -10,11 +10,15 @@ class WindowSettings(QtWidgets.QWidget):
         # Кнопка сохранить выбранных профиль
         self.btn_save_profile = QtWidgets.QPushButton('Save and Exit')
         self.btn_save_profile.setFixedWidth(150)
+        self.btn_save_profile.setDisabled(True)
 
         self.line_new_profile_name_value = QtWidgets.QLineEdit()
+        self.line_new_profile_name_value.textChanged[str].connect(self.activate_save_profile_btn)
         self.line_host_value = QtWidgets.QLineEdit()
+        self.line_host_value.textChanged[str].connect(self.activate_save_profile_btn)
         self.line_port_value = QtWidgets.QLineEdit()
         self.line_user_value = QtWidgets.QLineEdit()
+        self.line_user_value.textChanged[str].connect(self.activate_save_profile_btn)
         self.line_password_value = QtWidgets.QLineEdit()
         self.line_database_value = QtWidgets.QLineEdit()
 
@@ -183,5 +187,15 @@ class WindowSettings(QtWidgets.QWidget):
         self.add_profile_window.setLayout(self.profile_layout)
         self.add_profile_window.setMinimumSize(200, 200)
 
+        # self.line_new_profile_name_value
+
 
         self.add_profile_window.show()
+
+    def activate_save_profile_btn(self):
+        if self.line_new_profile_name_value.text() and \
+                self.line_host_value.text() and \
+                self.line_user_value.text():
+            self.btn_save_profile.setDisabled(False)
+        else:
+            self.btn_save_profile.setDisabled(True)
