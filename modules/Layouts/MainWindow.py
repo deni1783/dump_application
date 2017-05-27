@@ -18,11 +18,11 @@ class MainLayout(QtWidgets.QWidget):
 
 
         # Окно выбора диалектов
-        dialect_box = DialectsLayout(self)
+        self.dialect_box = DialectsLayout(self)
 
         # Назначаем обработчики для кнопок
-        for key in dialect_box.dialects_obj:
-            dialect_box.dialects_obj[key].clicked.connect(partial(self.on_clicked_btn, key))
+        for key in self.dialect_box.dialects_obj:
+            self.dialect_box.dialects_obj[key].clicked.connect(partial(self.on_clicked_btn, key))
 
 
 
@@ -40,7 +40,7 @@ class MainLayout(QtWidgets.QWidget):
         # Добавляем группированные боксы в главное окно
         self.main_layout = QtWidgets.QHBoxLayout()
 
-        self.main_layout.addWidget(dialect_box.out_window)
+        self.main_layout.addWidget(self.dialect_box.out_window)
         self.main_layout.addWidget(self.settings_box)
 
         self.setLayout(self.main_layout)
@@ -48,6 +48,13 @@ class MainLayout(QtWidgets.QWidget):
 
     def on_clicked_btn(self, dialect):
         # print('clicked ', dialect)
+
+        # Делаем все кнопки диалектов активными
+        for btn in self.dialect_box.dialects_obj:
+            self.dialect_box.dialects_obj[btn].setDisabled(False)
+        # Устанавливаем кнопку выбраннокго диалекта неактивной
+        self.dialect_box.dialects_obj[dialect].setDisabled(True)
+
 
         clear_widget(self.settings_layout)
         add_wgt = SettingsLayout(dialect).out_window

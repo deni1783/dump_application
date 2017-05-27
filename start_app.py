@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     window = MainLayout()
     window.setWindowTitle('DUMP')
-    window.resize(500, 200)
+    window.setMinimumWidth(500)
     window.show()
 
     sys.exit(app.exec_())
