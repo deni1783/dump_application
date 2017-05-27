@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 from modules.my_classes.WindowSettings import WindowSettings
-
+from functools import partial
 
 
 class Settings(WindowSettings):
@@ -11,10 +11,13 @@ class Settings(WindowSettings):
 
         profile = settings['default']
 
-        # изменяем значения
+        # изменяем значения настроек подключения
         self.change_value(profile)
 
-        self.btn_test_connect.clicked.connect(self.test_btn_clicked)
+        # Устанавливае обработчики на кнопки управления настройками
+        self.btn_add_profile.clicked.connect(partial(self.add_profile))
+        self.btn_change_settings.clicked.connect(partial(self.change_profile_settings))
+        self.btn_test_connect.clicked.connect(partial(self.test_btn_clicked, 'test'))
 
 
 
@@ -30,5 +33,11 @@ class Settings(WindowSettings):
         self.out_window = wrap_vbox
 
 
-    def test_btn_clicked(self):
-        print('clicked')
+    def add_profile(self):
+        print('add profile')
+
+    def change_profile_settings(self):
+        print('change settings')
+
+    def test_btn_clicked(self, txt):
+        print('test connection', txt)
