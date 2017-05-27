@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 from modules.Layouts.DialectsWindow import DialectsLayout
 from modules.Layouts.SettingsWindow import SettingsLayout
 from functools import partial
@@ -30,7 +30,16 @@ class MainLayout(QtWidgets.QWidget):
 
         # Окно настроек
         self.settings_layout = QtWidgets.QVBoxLayout()
+
+        # Первоначальный вид
+        preview_lbl = QtWidgets.QLabel('Settings for Dialect')
+        preview_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.settings_layout.addWidget(preview_lbl)
+
         self.settings_box = QtWidgets.QGroupBox()
+        self.settings_box.setTitle('Settings')
+        self.settings_box.setAlignment(QtCore.Qt.AlignHCenter)
+
         self.settings_box.setFlat(True)
         self.settings_box.setLayout(self.settings_layout)
 
