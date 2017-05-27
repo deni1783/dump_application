@@ -64,6 +64,7 @@ class MainLayout(QtWidgets.QWidget):
         # Устанавливаем кнопку выбраннокго диалекта неактивной
         self.dialect_box.dialects_obj[dialect].setDisabled(True)
 
+        self.settings_box.setTitle(dialect)
 
         clear_widget(self.settings_layout)
         add_wgt = SettingsLayout(dialect).out_window

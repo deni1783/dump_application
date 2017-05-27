@@ -1,4 +1,5 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
+from modules.my_classes.SettingsForDialect import WindowSettings
 
 
 class Settings(QtWidgets.QWidget):
@@ -8,14 +9,27 @@ class Settings(QtWidgets.QWidget):
 
     def initUI(self):
 
+
+        main_box = WindowSettings()
+
+
         vbox = QtWidgets.QVBoxLayout()
 
 
-        wrap_vbox = QtWidgets.QVBoxLayout()
         lbl = QtWidgets.QLabel('test lbl for postgresql')
-        wrap_vbox.addWidget(lbl)
+        box = QtWidgets.QGroupBox('Connection settings')
+        box.setAlignment(QtCore.Qt.AlignHCenter)
+
+        vbox.addWidget(lbl)
+
+        box.setLayout(vbox)
 
 
+
+        # Возвращаемая обертка
+        wrap_vbox = QtWidgets.QVBoxLayout()
+        wrap_vbox.addWidget(main_box.box_conn_settings)
+        wrap_vbox.addWidget(main_box.box_type_dump)
 
 
         # Возвращаем в основной макет

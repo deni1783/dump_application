@@ -1,4 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
+
+# Новые диалекты добавляем в импорт
 from modules.dialects import (
     oracle, ms_sql_server, redshift, sybase, mysql, db2, teradata,
     postgresql, greenplum, netezza
@@ -12,7 +14,8 @@ class SettingsLayout(QtWidgets.QWidget):
 
     def initUI(self, dialect_name: str):
 
-        # Для каждого диалекта добавляем условия и соответствующие классы в папку modules/dialects
+        # Для каждого диалекта добавляем условия и соответствующие классы
+        # в папку modules/dialects
         if dialect_name.lower() == 'oracle':
             wrap_vbox = oracle.Settings().out_window
         elif dialect_name.lower() == 'ms sql server':
@@ -40,7 +43,8 @@ class SettingsLayout(QtWidgets.QWidget):
             err_lbl = QtWidgets.QLabel('Unsupported dialect: ' + dialect_name)
             wrap_vbox.addWidget(err_lbl)
 
-        out_box = QtWidgets.QGroupBox(dialect_name)
+        out_box = QtWidgets.QGroupBox()
+        out_box.setFlat(True)
         out_box.setAlignment(QtCore.Qt.AlignHCenter)
         out_box.setLayout(wrap_vbox)
 
