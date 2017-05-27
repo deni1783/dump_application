@@ -6,15 +6,13 @@ from modules.my_classes.SettingsForDialect import WindowSettings
 class Settings(WindowSettings):
     def __init__(self, parent=None):
         WindowSettings.__init__(self, parent)
-        self.initUI()
-
-    def initUI(self):
 
         settings = self.json_data['postgresql']
 
         profile = settings['default']
 
-        self.user_value.setText(profile['user'])
+        # изменяем значения
+        self.change_value(profile)
 
 
 

@@ -9,10 +9,10 @@ class WindowSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
-        self.path_to_json_conneting_settings = 'settings/connection_settings.json'
+        self.path_to_json_connecting_settings = 'settings/connection_settings.json'
 
         # Получаем объект настроек
-        self.json_data = self.pars_json(self.path_to_json_conneting_settings)
+        self.json_data = self.pars_json(self.path_to_json_connecting_settings)
 
         # Разметка для настроек
         self.settings_grid = QtWidgets.QGridLayout()
@@ -35,6 +35,10 @@ class WindowSettings(QtWidgets.QWidget):
         self.database_value = QtWidgets.QLabel('undefined')
 
 
+        self.btn_change_settings = QtWidgets.QPushButton('Change')
+        self.btn_test_connect = QtWidgets.QPushButton('Test')
+
+
         # Добавляем надписи в разметку
         self.settings_grid.addWidget(self.host, 0, 0)
         self.settings_grid.addWidget(self.host_value, 0, 1)
@@ -51,6 +55,9 @@ class WindowSettings(QtWidgets.QWidget):
         self.settings_grid.addWidget(self.database, 4, 0)
         self.settings_grid.addWidget(self.database_value, 4, 1)
 
+        self.settings_grid.addWidget(self.btn_change_settings, 0, 2)
+        self.settings_grid.addWidget(self.btn_test_connect, 1, 2)
+
         # Группа настроек
         self.box_conn_settings = QtWidgets.QGroupBox('Connection settings')
         self.box_conn_settings.setAlignment(QtCore.Qt.AlignHCenter)
@@ -66,3 +73,10 @@ class WindowSettings(QtWidgets.QWidget):
         data = open(file).read()
         json_data = json.loads(data)
         return json_data
+
+    def change_value(self, obj):
+        self.host_value.setText(obj['host'])
+        self.port_value.setText(obj['port'])
+        self.user_value.setText(obj['user'])
+        self.password_value.setText(obj['password'])
+        self.database_value.setText(obj['database'])

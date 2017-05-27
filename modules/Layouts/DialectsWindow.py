@@ -41,7 +41,7 @@ class DialectsLayout(QtWidgets.QWidget):
                               'padding-top: 30px;'
                               'margin-top:10px'
                               '}')
-        out_box.setMaximumWidth(180)
+        # out_box.setFixedWidth(180)
         out_box.setLayout(vbox)
 
         # Возвращаем в основной макет

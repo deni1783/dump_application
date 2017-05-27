@@ -46,6 +46,8 @@ class MainLayout(QtWidgets.QWidget):
 
 
 
+
+
         # Добавляем группированные боксы в главное окно
         self.main_layout = QtWidgets.QHBoxLayout()
 
