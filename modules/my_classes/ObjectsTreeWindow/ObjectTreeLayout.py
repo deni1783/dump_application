@@ -6,6 +6,7 @@ class ObjectTree(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+        self.arr_of_selected_item_in_tree = []
 
         self.vbox_obj_tree = QtWidgets.QVBoxLayout()
 
@@ -37,8 +38,7 @@ class ObjectTree(QtWidgets.QWidget):
         for d in obj:
             database = QtWidgets.QTreeWidgetItem(self.tree_widget)
             database.setText(0, "{}".format(d))
-            # database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
-            database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIs)
+            database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
 
             for s in obj[d]:
                 schema = QtWidgets.QTreeWidgetItem(database)
@@ -46,13 +46,32 @@ class ObjectTree(QtWidgets.QWidget):
                 schema.setFlags(schema.flags() | QtCore.Qt.ItemIsUserCheckable)
                 schema.setCheckState(0, QtCore.Qt.Unchecked)
 
+                for t in obj[d][s]:
+                    table = QtWidgets.QTreeWidgetItem(schema)
+                    table.setText(0, "{}".format(t))
+                    table.setFlags(table.flags() | QtCore.Qt.ItemIsUserCheckable)
+                    table.setCheckState(0, QtCore.Qt.Unchecked)
+
     # def run_creating_dump(self):
     #     print(self.tree_widget.currentItem())
 
     def clicked_item(self):
         current_item = self.tree_widget.currentItem()
+
+        # Статус флага
         checked_status = current_item.checkState(0)
         if checked_status == 0:
             current_item.setCheckState(0, QtCore.Qt.Checked)
         else:
             current_item.setCheckState(0, QtCore.Qt.Unchecked)
+
+        # Вычисляем родителей
+        tmp_str = ''
+        if current_item.parent():
+            # Если есть и нет
+            tmp_str += '.' + current_item.parent().text(0)
+            if current_item.parent().parent():
+                # Если есть то это база
+                tmp_str = current_item.parent().parent().text(0) + '.' + tmp_str
+
+        print(tmp_str, current_item.text(0))

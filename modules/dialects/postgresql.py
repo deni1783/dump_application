@@ -133,7 +133,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                 break
 
         # Добавляем объекты в дерево
-        self.add_objects_to_tree(self.settings)
+        self.add_objects_to_tree(self.full_json_data)
 
 
 
