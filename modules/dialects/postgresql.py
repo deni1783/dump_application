@@ -63,7 +63,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
         # Запуск дампа
-        # self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
+        self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
 
 
         # Возвращаемая обертка
@@ -139,5 +139,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         print('Custom DB ', checked_radio.text())
 
-    # def run_creating_dump(self):
-    #     print(self.tree_widget.selectedItems())
+    def run_creating_dump(self):
+        # t = self.tree_widget.itemClicked()
+        # print(t)
+        pass

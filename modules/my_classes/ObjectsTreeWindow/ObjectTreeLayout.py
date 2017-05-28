@@ -16,6 +16,8 @@ class ObjectTree(QtWidgets.QWidget):
         self.tree_widget.setSortingEnabled(True)
         self.tree_widget.setAnimated(True)
 
+        self.tree_widget.itemClicked.connect(partial(self.clicked_item))
+
         # Запуск дампа
         self.btn_run_creating_dump = QtWidgets.QPushButton('Run creating DUMP')
         # self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
@@ -35,7 +37,8 @@ class ObjectTree(QtWidgets.QWidget):
         for d in obj:
             database = QtWidgets.QTreeWidgetItem(self.tree_widget)
             database.setText(0, "{}".format(d))
-            database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
+            # database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
+            database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIs)
 
             for s in obj[d]:
                 schema = QtWidgets.QTreeWidgetItem(database)
@@ -45,3 +48,11 @@ class ObjectTree(QtWidgets.QWidget):
 
     # def run_creating_dump(self):
     #     print(self.tree_widget.currentItem())
+
+    def clicked_item(self):
+        current_item = self.tree_widget.currentItem()
+        checked_status = current_item.checkState(0)
+        if checked_status == 0:
+            current_item.setCheckState(0, QtCore.Qt.Checked)
+        else:
+            current_item.setCheckState(0, QtCore.Qt.Unchecked)
