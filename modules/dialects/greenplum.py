@@ -1,6 +1,8 @@
 from functools import partial
 from PyQt5 import QtWidgets, QtCore
 
+from modules.my_classes import custom_functions
+
 from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 
@@ -50,21 +52,14 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # =================================================
 
 
-        # Устанавливае обработчики на кнопки управления настройками
-        self.btn_add_profile.clicked.connect(partial(self.add_profile))
-        self.btn_change_settings.clicked.connect(partial(self.change_profile_settings))
-        self.btn_test_connect.clicked.connect(partial(self.test_connection, 'test'))
-
-        self.combo_box_list_profiles.activated[str].connect(partial(self.change_profile))
-
-        self.btn_save_profile.clicked.connect(partial(self.save_new_profile))
+        # Проверка соединения
+        self.btn_test_connect.clicked.connect(partial(self.test_connection, greenplum.connect))
 
         # Обработчики для кнопок выбора баз данных
         self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
         self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
 
-
-        # Обработцики для дерева объектов
+        # Обработчики для дерева объектов
         self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
                                                            greenplum.all_schemas,
                                                            greenplum.all_tables))
@@ -100,10 +95,14 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
     def selected_custom_databases(self):
         # Изменяем курсор в песочные часы
-        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+        custom_functions.set_cursor_style('wait')
 
         # Получаем текущие настройки подключения
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+
+        # Проверяем подключение если ошибка, выводим сообщение об ошибке
+        status = self.test_connection(greenplum.connect)
+        if status != 'Connected': return
 
         checked_radio = None
         # Находим выбранный тип дампа
@@ -117,15 +116,10 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         result_arr = greenplum.all_databases(current_connecting_settings)
         self.add_children_to_parent_item(result_arr, self.tree_widget)
 
-
         print('Custom DB ', checked_radio.text())
 
         # Возвращаем обычный курсор
-        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
-
-
-    # def load_child_for_item(self):
-    #     print(self.tree_widget.currentItem().text(0))
+        custom_functions.set_cursor_style('normal')
 
     def run_creating_dump(self):
         # t = self.tree_widget.itemClicked()
