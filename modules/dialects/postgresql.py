@@ -7,6 +7,8 @@ from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
 
 
+from modules.queries_for_dialects import postgresql
+
 class Settings(ConnectionSettings, DumpSettings, ObjectTree):
     def __init__(self, parent=None):
         ConnectionSettings.__init__(self, parent)
@@ -125,6 +127,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
     def selected_custom_databases(self):
+        # Получаем текущие настройки подключения
+        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+
         checked_radio = None
         # Находим выбранный тип дампа
         for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
@@ -133,8 +138,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                 break
 
         # Добавляем объекты в дерево
-        self.add_objects_to_tree(self.full_json_data)
-
+        # self.add_objects_to_tree(self.full_json_data)
+        result_arr = postgresql.all_databases(current_connecting_settings)
+        self.add_objects_to_tree(result_arr)
 
 
         print('Custom DB ', checked_radio.text())
