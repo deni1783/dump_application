@@ -60,9 +60,6 @@ class ObjectTree(QtWidgets.QWidget):
 
     def add_children_to_parent_item(self, child_arr, parent):
 
-        # Изменяем курсор в песочные часы
-        self.setCursor(QtCore.Qt.WaitCursor)
-
         # полность очищаем родитель перед добавление детей
         if check_type_of_item(parent) == 'database' or check_type_of_item(parent) == 'schema':
             clear_parent_tree_widget_item(parent)
@@ -85,8 +82,7 @@ class ObjectTree(QtWidgets.QWidget):
             child.setFlags(child.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             child.setCheckState(0, QtCore.Qt.Unchecked)
 
-        # Возвращаем обычный курсор
-        self.setCursor(QtCore.Qt.ArrowCursor)
+
 
     # def clicked_item(self):
     #     current_item = self.tree_widget.currentItem()
@@ -115,6 +111,10 @@ class ObjectTree(QtWidgets.QWidget):
     #         self.arr_of_selected_item_in_tree.append(tmp_str)
 
     def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
+
+        # Изменяем курсор в песочные часы
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
         # Тип элемента (база, схема, таблица)
         type_of_item = None
@@ -139,8 +139,11 @@ class ObjectTree(QtWidgets.QWidget):
             self.add_children_to_parent_item(result_obj, current_item)
 
         if type_of_item == 'schema':
-            current_connecting_settings["database"] = current_item.text(0)
+            current_connecting_settings["database"] = current_item.parent().text(0)
             result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
             self.add_children_to_parent_item(result_obj, current_item)
+
+        # Возвращаем обычный курсор
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
 
 

@@ -66,7 +66,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         # Обработцики для дерева объектов
         self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
-                                                           postgresql.load_schemas,
+                                                           postgresql.all_schemas,
                                                            postgresql.all_tables))
 
         # Запуск дампа
