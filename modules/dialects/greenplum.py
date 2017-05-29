@@ -1,5 +1,5 @@
 from functools import partial
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
@@ -53,7 +53,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Устанавливае обработчики на кнопки управления настройками
         self.btn_add_profile.clicked.connect(partial(self.add_profile))
         self.btn_change_settings.clicked.connect(partial(self.change_profile_settings))
-        self.btn_test_connect.clicked.connect(partial(self.test_btn_clicked, 'test'))
+        self.btn_test_connect.clicked.connect(partial(self.test_connection, 'test'))
 
         self.combo_box_list_profiles.activated[str].connect(partial(self.change_profile))
 
@@ -88,20 +88,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
 
-    def change_profile_settings(self):
-        print('change settings')
-
-    def test_btn_clicked(self, txt):
-        print('test connection', txt)
-
-    def change_profile(self, profile_name):
-        # Получаем новые значения
-        new_profile = self.settings[profile_name]
-
-        # Заполняем новыми значениями
-        self.change_settings_values(new_profile)
-
-
     def selected_default_databases(self):
         checked_radio = None
         # Находим выбранный тип дампа
@@ -113,6 +99,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
     def selected_custom_databases(self):
+        # Изменяем курсор в песочные часы
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+
         # Получаем текущие настройки подключения
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
 
@@ -130,6 +119,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
         print('Custom DB ', checked_radio.text())
+
+        # Возвращаем обычный курсор
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
 
 
     # def load_child_for_item(self):

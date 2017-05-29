@@ -1,5 +1,7 @@
 from functools import partial
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
+
+from modules.my_classes import custom_functions
 
 from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
@@ -49,28 +51,23 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Устанавливае обработчики на кнопки
         # =================================================
 
-
-        # Устанавливае обработчики на кнопки управления настройками
-        self.btn_add_profile.clicked.connect(partial(self.add_profile))
-        self.btn_change_settings.clicked.connect(partial(self.change_profile_settings))
-        self.btn_test_connect.clicked.connect(partial(self.test_btn_clicked, 'test'))
-
-        self.combo_box_list_profiles.activated[str].connect(partial(self.change_profile))
-
-        self.btn_save_profile.clicked.connect(partial(self.save_new_profile))
+        # Проверка соединения
+        self.btn_test_connect.clicked.connect(partial(self.test_connection, postgresql.connect))
 
         # Обработчики для кнопок выбора баз данных
         self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
         self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
 
 
-        # Обработцики для дерева объектов
+        # Обработчики для дерева объектов
         self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
                                                            postgresql.all_schemas,
                                                            postgresql.all_tables))
 
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
+
+
 
 
         # Возвращаемая обертка
@@ -87,19 +84,20 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.out_window = wrap_full
 
 
-
-    def change_profile_settings(self):
-        print('change settings')
-
-    def test_btn_clicked(self, txt):
-        print('test connection', txt)
-
-    def change_profile(self, profile_name):
-        # Получаем новые значения
-        new_profile = self.settings[profile_name]
-
-        # Заполняем новыми значениями
-        self.change_settings_values(new_profile)
+    # def test_connection(self):
+    #     custom_functions.set_cursor_style('wait')
+    #
+    #     current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+    #     status = postgresql.connect(current_connecting_settings)
+    #     if status == 'Connected':
+    #         self.lbl_connection_status.setText('Success')
+    #         self.lbl_connection_status.setStyleSheet('QLabel {color: green; font-size: 14px}')
+    #     else:
+    #         self.lbl_connection_status.setText('Fail')
+    #         self.lbl_connection_status.setStyleSheet('QLabel {color: red; font-size: 14px}')
+    #         self.lbl_connection_status.setToolTip(status)
+    #
+    #     custom_functions.set_cursor_style('normal')
 
 
     def selected_default_databases(self):
@@ -113,8 +111,21 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
     def selected_custom_databases(self):
+
+        # Изменяем курсор в песочные часы
+        custom_functions.set_cursor_style('wait')
+
         # Получаем текущие настройки подключения
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+
+        # Проверяем подключение если ошибка, выводим сообщение об ошибке
+        connection_status = self.test_connection(postgresql.connect)
+        if connection_status != 'Connected':
+            error = QtWidgets.QErrorMessage(self.box_conn_settings)
+            error.setWindowTitle('Connection error!')
+            error.showMessage(connection_status)
+            error.show()
+            return
 
         checked_radio = None
         # Находим выбранный тип дампа
@@ -131,6 +142,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         print('Custom DB ', checked_radio.text())
 
+        # Возвращаем обычный курсор
+        custom_functions.set_cursor_style('normal')
 
     # def load_child_for_item(self):
     #     print(self.tree_widget.currentItem().text(0))

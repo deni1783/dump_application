@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 import json
-
-
+from functools import partial
+from modules.my_classes import custom_functions
 
 class ConnectionSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -92,6 +92,9 @@ class ConnectionSettings(QtWidgets.QWidget):
         self.btn_change_settings = QtWidgets.QPushButton('Change')
         self.btn_test_connect = QtWidgets.QPushButton('Test')
 
+        # Статус подключения
+        self.lbl_connection_status = QtWidgets.QLabel()
+
         # Изменение вида кнопок
         self.btn_add_profile.setFixedWidth(100)
         self.btn_change_settings.setFixedWidth(100)
@@ -105,6 +108,7 @@ class ConnectionSettings(QtWidgets.QWidget):
         self.vbox_btns_change_settings.addWidget(self.btn_add_profile)
         self.vbox_btns_change_settings.addWidget(self.btn_change_settings)
         self.vbox_btns_change_settings.addWidget(self.btn_test_connect)
+        self.vbox_btns_change_settings.addWidget(self.lbl_connection_status)
 
 
 
@@ -122,6 +126,20 @@ class ConnectionSettings(QtWidgets.QWidget):
         self.box_conn_settings.setAlignment(QtCore.Qt.AlignHCenter)
         self.box_conn_settings.setLayout(self.hbox_wrap_settings)
 
+
+
+
+
+        # =================================================
+        # Устанавливае обработчики на кнопки
+        # =================================================
+        self.btn_add_profile.clicked.connect(partial(self.add_profile))
+        self.btn_change_settings.clicked.connect(partial(self.change_profile_settings))
+
+
+
+        self.combo_box_list_profiles.activated[str].connect(partial(self.change_profile))
+        self.btn_save_profile.clicked.connect(partial(self.save_new_profile))
 
 
     @staticmethod
@@ -216,3 +234,38 @@ class ConnectionSettings(QtWidgets.QWidget):
         self.write_obj_to_json_file(self.full_json_data)
         self.combo_box_list_profiles.addItem(new_profile_name)
         self.add_profile_window.close()
+
+
+    def change_profile(self, profile_name):
+        # Получаем новые значения
+        new_profile = self.full_json_data[self.dialect_name][profile_name]
+
+        # Заполняем новыми значениями
+        self.change_settings_values(new_profile)
+
+    def change_profile_settings(self):
+        print('change settings')
+
+
+    def test_connection(self, func_test_connect):
+        # Функция проверки соединения
+        # Для каждого диалекта нужно назначить ее на нажатие кнопки "Test"
+        # Например:  self.btn_test_connect.clicked.connect(partial(self.test_connection, postgresql.connect))
+
+        # В качестве параметра передать нужную функцию подключения, которая вернет:
+        # При успешном подключении - "Connected"
+        # При ошибке - код ошибки
+
+        custom_functions.set_cursor_style('wait')
+
+        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+        status = func_test_connect(current_connecting_settings)
+        if status == 'Connected':
+            self.lbl_connection_status.setText('Success')
+            self.lbl_connection_status.setStyleSheet('QLabel {color: green; font-size: 14px}')
+        else:
+            self.lbl_connection_status.setText('Fail')
+            self.lbl_connection_status.setStyleSheet('QLabel {color: red; font-size: 14px}')
+            self.lbl_connection_status.setToolTip(status)
+        custom_functions.set_cursor_style('normal')
+        return status

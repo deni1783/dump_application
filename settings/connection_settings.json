@@ -97,6 +97,13 @@
       "user": "asdf",
       "password": "asdf",
       "database": "asdf"
+    },
+    "reqw": {
+      "host": "reqw",
+      "port": "req",
+      "user": "req",
+      "password": "reqw",
+      "database": "rqew"
     }
   },
   "greenplum": {
