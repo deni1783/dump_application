@@ -256,6 +256,9 @@ class ConnectionSettings(QtWidgets.QWidget):
         # При успешном подключении - "Connected"
         # При ошибке - код ошибки
 
+        # При неудвчном подключении выводит сообщение с кодом ошибки
+        # Функция возвращает "Connected" или текст ошибки
+
         custom_functions.set_cursor_style('wait')
 
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
@@ -267,5 +270,12 @@ class ConnectionSettings(QtWidgets.QWidget):
             self.lbl_connection_status.setText('Fail')
             self.lbl_connection_status.setStyleSheet('QLabel {color: red; font-size: 14px}')
             self.lbl_connection_status.setToolTip(status)
+
+        if status != 'Connected':
+            error_msg = QtWidgets.QErrorMessage(self.box_conn_settings)
+            error_msg.setWindowTitle('Connection error!')
+            error_msg.showMessage(status)
+            error_msg.show()
+
         custom_functions.set_cursor_style('normal')
         return status

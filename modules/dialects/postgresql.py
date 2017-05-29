@@ -119,13 +119,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
 
         # Проверяем подключение если ошибка, выводим сообщение об ошибке
-        connection_status = self.test_connection(postgresql.connect)
-        if connection_status != 'Connected':
-            error = QtWidgets.QErrorMessage(self.box_conn_settings)
-            error.setWindowTitle('Connection error!')
-            error.showMessage(connection_status)
-            error.show()
-            return
+        status = self.test_connection(postgresql.connect)
+        if status != 'Connected': return
 
         checked_radio = None
         # Находим выбранный тип дампа
@@ -145,8 +140,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Возвращаем обычный курсор
         custom_functions.set_cursor_style('normal')
 
-    # def load_child_for_item(self):
-    #     print(self.tree_widget.currentItem().text(0))
 
     def run_creating_dump(self):
         # t = self.tree_widget.itemClicked()
