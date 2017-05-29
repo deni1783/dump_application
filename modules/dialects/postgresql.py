@@ -13,9 +13,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         DumpSettings.__init__(self, parent)
         ObjectTree.__init__(self, parent)
 
-        self.dialect = 'postgresql'
+        self.dialect_name = 'postgresql'
 
-        self.settings = self.full_json_data[self.dialect]
+        self.settings = self.full_json_data[self.dialect_name]
 
 
         # =================================================
@@ -102,7 +102,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         new_password = self.line_password_value.text()
         new_database = self.line_database_value.text()
 
-        self.full_json_data[self.dialect][new_profile_name] = {
+        self.full_json_data[self.dialect_name][new_profile_name] = {
             "host": new_host,
             "port": new_port,
             "user": new_user,
@@ -141,5 +141,4 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
     def run_creating_dump(self):
         # t = self.tree_widget.itemClicked()
-        # print(t)
-        pass
+        print(self.arr_of_selected_item_in_tree)

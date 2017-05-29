@@ -6,6 +6,9 @@ class ObjectTree(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+        self.dialect_name = None
+
+        # Массив выбранных элементов из дерева для которых нужно выполнить дамп
         self.arr_of_selected_item_in_tree = []
 
         self.vbox_obj_tree = QtWidgets.QVBoxLayout()
@@ -13,6 +16,8 @@ class ObjectTree(QtWidgets.QWidget):
 
         # Дерево выгруженных объектов
         self.tree_widget = QtWidgets.QTreeWidget()
+        self.tree_widget.setMinimumWidth(300)
+        self.tree_widget.setMinimumHeight(400)
         self.tree_widget.setHeaderLabel('Databases')
         self.tree_widget.setSortingEnabled(True)
         self.tree_widget.setAnimated(True)
@@ -35,17 +40,20 @@ class ObjectTree(QtWidgets.QWidget):
 
     def add_objects_to_tree(self, obj):
 
+        # Загружаем базы
         for d in obj:
             database = QtWidgets.QTreeWidgetItem(self.tree_widget)
             database.setText(0, "{}".format(d))
             database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
 
+            # Загружаем схемы
             for s in obj[d]:
                 schema = QtWidgets.QTreeWidgetItem(database)
                 schema.setText(0, "{}".format(s))
-                schema.setFlags(schema.flags() | QtCore.Qt.ItemIsUserCheckable)
+                schema.setFlags(schema.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
                 schema.setCheckState(0, QtCore.Qt.Unchecked)
 
+                # Загружаем таблицы
                 for t in obj[d][s]:
                     table = QtWidgets.QTreeWidgetItem(schema)
                     table.setText(0, "{}".format(t))
@@ -58,7 +66,7 @@ class ObjectTree(QtWidgets.QWidget):
     def clicked_item(self):
         current_item = self.tree_widget.currentItem()
 
-        # Статус флага
+        # Статус флага (0 - не выбран, 2 - выбран)
         checked_status = current_item.checkState(0)
         if checked_status == 0:
             current_item.setCheckState(0, QtCore.Qt.Checked)
@@ -68,10 +76,15 @@ class ObjectTree(QtWidgets.QWidget):
         # Вычисляем родителей
         tmp_str = ''
         if current_item.parent():
-            # Если есть и нет
-            tmp_str += '.' + current_item.parent().text(0)
+            # Если есть то либо схема, либо база
+            tmp_str += current_item.parent().text(0) + '.'
             if current_item.parent().parent():
-                # Если есть то это база
+                # Если есть то это точно база база
                 tmp_str = current_item.parent().parent().text(0) + '.' + tmp_str
+        tmp_str += current_item.text(0)
 
-        print(tmp_str, current_item.text(0))
+        # Проверяем и добавляем или удаляем элемент из результирующего массива
+        if tmp_str in self.arr_of_selected_item_in_tree:
+            self.arr_of_selected_item_in_tree.remove(tmp_str)
+        else:
+            self.arr_of_selected_item_in_tree.append(tmp_str)
