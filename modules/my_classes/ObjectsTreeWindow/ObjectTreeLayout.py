@@ -22,7 +22,8 @@ class ObjectTree(QtWidgets.QWidget):
         self.tree_widget.setSortingEnabled(True)
         self.tree_widget.setAnimated(True)
 
-        self.tree_widget.itemClicked.connect(partial(self.clicked_item))
+        # self.tree_widget.itemClicked.connect(partial(self.clicked_item))
+        # self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item))
 
         # Запуск дампа
         self.btn_run_creating_dump = QtWidgets.QPushButton('Run creating DUMP')
@@ -88,3 +89,29 @@ class ObjectTree(QtWidgets.QWidget):
             self.arr_of_selected_item_in_tree.remove(tmp_str)
         else:
             self.arr_of_selected_item_in_tree.append(tmp_str)
+
+    def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
+        # Тип элемента (база, схема, таблица)
+        type_of_item = None
+
+        current_item = self.tree_widget.currentItem()
+
+        if current_item.parent():
+            if current_item.parent().parent():
+                if not current_item.parent().parent().parent():
+                    type_of_item = 'table'
+            else:
+                type_of_item = 'schema'
+        else:
+            type_of_item = 'database'
+
+
+        if type_of_item == 'table': return
+
+        if type_of_item == 'databse':
+            result_obj = func_load_schemas()
+            # self.add_objects_to_tree(result_obj)
+
+
+        print(type_of_item)
+        # print(self.tree_widget.currentItem().text(0))
