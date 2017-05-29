@@ -65,7 +65,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
         # Обработцики для дерева объектов
-        self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item))
+        self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item, postgresql.load_schemas, postgresql.all_tables))
 
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
@@ -141,9 +141,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                 break
 
         # Добавляем объекты в дерево
-        self.add_objects_to_tree(self.full_json_data)
-        # result_arr = postgresql.all_databases(current_connecting_settings)
-        # self.add_objects_to_tree(result_arr)
+        # self.add_objects_to_tree(self.full_json_data)
+        result_arr = postgresql.all_databases(current_connecting_settings)
+        self.add_children_to_parent_item(result_arr, self.tree_widget)
 
 
         print('Custom DB ', checked_radio.text())
@@ -155,3 +155,28 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
     def run_creating_dump(self):
         # t = self.tree_widget.itemClicked()
         print(self.arr_of_selected_item_in_tree)
+
+    def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
+        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+        # Тип элемента (база, схема, таблица)
+        type_of_item = None
+
+        current_item = self.tree_widget.currentItem()
+
+        if current_item.parent():
+            if current_item.parent().parent():
+                if not current_item.parent().parent().parent():
+                    type_of_item = 'table'
+            else:
+                type_of_item = 'schema'
+        else:
+            type_of_item = 'database'
+
+
+        if type_of_item == 'table': return
+
+        if type_of_item == 'database':
+            current_connecting_settings["database"] = current_item.text(0)
+            result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
+            self.add_children_to_parent_item(result_obj, current_item)
+            print(current_item.childCount())

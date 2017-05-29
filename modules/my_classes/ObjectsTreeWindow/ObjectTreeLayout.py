@@ -1,6 +1,15 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from functools import partial
 
+def check_type_of_item(item):
+    if item.parent():
+        if item.parent().parent():
+            if not item.parent().parent().parent():
+                return 'table'
+        else:
+            return 'schema'
+    else:
+        return 'database'
 
 class ObjectTree(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -18,7 +27,7 @@ class ObjectTree(QtWidgets.QWidget):
         self.tree_widget = QtWidgets.QTreeWidget()
         self.tree_widget.setMinimumWidth(300)
         self.tree_widget.setMinimumHeight(400)
-        self.tree_widget.setHeaderLabel('Databases')
+        self.tree_widget.setHeaderLabel('Objects')
         self.tree_widget.setSortingEnabled(True)
         self.tree_widget.setAnimated(True)
 
@@ -45,12 +54,14 @@ class ObjectTree(QtWidgets.QWidget):
         for d in obj:
             database = QtWidgets.QTreeWidgetItem(self.tree_widget)
             database.setText(0, "{}".format(d))
+            database.setIcon(0, QtGui.QIcon("icons/database.png"))
             database.setFlags(database.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
 
             # Загружаем схемы
             for s in obj[d]:
                 schema = QtWidgets.QTreeWidgetItem(database)
                 schema.setText(0, "{}".format(s))
+                schema.setIcon(0, QtGui.QIcon("icons/schema.png"))
                 schema.setFlags(schema.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
                 schema.setCheckState(0, QtCore.Qt.Unchecked)
 
@@ -58,11 +69,18 @@ class ObjectTree(QtWidgets.QWidget):
                 for t in obj[d][s]:
                     table = QtWidgets.QTreeWidgetItem(schema)
                     table.setText(0, "{}".format(t))
+                    table.setIcon(0, QtGui.QIcon("icons/table.png"))
                     table.setFlags(table.flags() | QtCore.Qt.ItemIsUserCheckable)
                     table.setCheckState(0, QtCore.Qt.Unchecked)
 
-    # def run_creating_dump(self):
-    #     print(self.tree_widget.currentItem())
+
+    def add_children_to_parent_item(self, child_arr, parent):
+        for item in child_arr:
+            child = QtWidgets.QTreeWidgetItem(parent)
+            child.setText(0, "{}".format(item))
+            child.setIcon(0, QtGui.QIcon("icons/database.png"))
+            child.setFlags(child.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
+            child.setCheckState(0, QtCore.Qt.Unchecked)
 
     def clicked_item(self):
         current_item = self.tree_widget.currentItem()
@@ -91,26 +109,18 @@ class ObjectTree(QtWidgets.QWidget):
             self.arr_of_selected_item_in_tree.append(tmp_str)
 
     def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
-        # Тип элемента (база, схема, таблица)
-        type_of_item = None
-
         current_item = self.tree_widget.currentItem()
 
-        if current_item.parent():
-            if current_item.parent().parent():
-                if not current_item.parent().parent().parent():
-                    type_of_item = 'table'
-            else:
-                type_of_item = 'schema'
-        else:
-            type_of_item = 'database'
+        # Тип элемента (база, схема, таблица)
+        type_of_item = check_type_of_item(current_item)
 
 
         if type_of_item == 'table': return
 
-        if type_of_item == 'databse':
+        if type_of_item == 'database':
             result_obj = func_load_schemas()
-            # self.add_objects_to_tree(result_obj)
+            self.add_children_to_parent_item(result_obj, current_item)
+            print(current_item.children())
 
 
         print(type_of_item)

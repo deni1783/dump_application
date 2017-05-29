@@ -99,3 +99,29 @@ def all_tables(obj_connection_settings, parent_db):
         out_arr.append(i[0])
 
     return out_arr
+
+
+def load_schemas(obj_connection_settings, database):
+    import psycopg2
+    conn_string = get_full_con_str(obj_connection_settings)
+    cnct = psycopg2.connect(conn_string)
+    cursor = cnct.cursor()
+    sql_query = """
+            select 
+                 schema_name as name
+              from information_schema.schemata
+            where
+             catalog_name = '{}'
+            order by schema_name;
+        """.format(database)
+
+    cursor.execute(sql_query)
+    records = cursor.fetchall()
+
+    out_arr = []
+
+    for i in records:
+        out_arr.append(i[0])
+
+    return out_arr
+
