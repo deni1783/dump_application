@@ -83,6 +83,20 @@
       "user": "denis",
       "password": "qwerty",
       "database": "DBCS"
+    },
+    "test2": {
+      "host": "192",
+      "port": "555",
+      "user": "dddd",
+      "password": "qwe",
+      "database": "db"
+    },
+    "asdf": {
+      "host": "asdf",
+      "port": "asdf",
+      "user": "asdf",
+      "password": "asdf",
+      "database": "asdf"
     }
   },
   "greenplum": {

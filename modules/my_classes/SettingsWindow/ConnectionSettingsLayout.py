@@ -7,6 +7,8 @@ class ConnectionSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+        self.dialect_name = None
+
         # Кнопка сохранить выбранных профиль
         self.btn_save_profile = QtWidgets.QPushButton('Save and Exit')
         # self.btn_save_profile.setFixedWidth(150)
@@ -195,3 +197,22 @@ class ConnectionSettings(QtWidgets.QWidget):
             self.btn_save_profile.setDisabled(False)
         else:
             self.btn_save_profile.setDisabled(True)
+
+    def save_new_profile(self):
+        new_profile_name = self.line_new_profile_name_value.text()
+        new_host = self.line_host_value.text()
+        new_port = self.line_port_value.text()
+        new_user = self.line_user_value.text()
+        new_password = self.line_password_value.text()
+        new_database = self.line_database_value.text()
+
+        self.full_json_data[self.dialect_name][new_profile_name] = {
+            "host": new_host,
+            "port": new_port,
+            "user": new_user,
+            "password": new_password,
+            "database": new_database
+        }
+        self.write_obj_to_json_file(self.full_json_data)
+        self.combo_box_list_profiles.addItem(new_profile_name)
+        self.add_profile_window.close()
