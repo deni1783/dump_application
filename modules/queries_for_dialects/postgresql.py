@@ -71,7 +71,10 @@ def all_databases(obj_connection_settings):
 def all_tables(obj_connection_settings, parent_db):
     import psycopg2
     conn_string = get_full_con_str(obj_connection_settings)
-    cnct = psycopg2.connect(conn_string)
+    try:
+        cnct = psycopg2.connect(conn_string)
+    except:
+        return []
     cursor = cnct.cursor()
     sql_query = """
         select
@@ -100,7 +103,10 @@ def all_tables(obj_connection_settings, parent_db):
 def load_schemas(obj_connection_settings, database):
     import psycopg2
     conn_string = get_full_con_str(obj_connection_settings)
-    cnct = psycopg2.connect(conn_string)
+    try:
+        cnct = psycopg2.connect(conn_string)
+    except:
+        return []
     cursor = cnct.cursor()
     sql_query = """
             select 

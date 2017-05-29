@@ -158,31 +158,31 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # t = self.tree_widget.itemClicked()
         print(self.arr_of_selected_item_in_tree)
 
-    def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
-        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
-        # Тип элемента (база, схема, таблица)
-        type_of_item = None
-
-        current_item = self.tree_widget.currentItem()
-
-        if current_item.parent():
-            if current_item.parent().parent():
-                if not current_item.parent().parent().parent():
-                    type_of_item = 'table'
-            else:
-                type_of_item = 'schema'
-        else:
-            type_of_item = 'database'
-
-
-        if type_of_item == 'table': return
-
-        if type_of_item == 'database':
-            current_connecting_settings["database"] = current_item.text(0)
-            result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
-            self.add_children_to_parent_item(result_obj, current_item)
-
-        if type_of_item == 'schema':
-            current_connecting_settings["database"] = current_item.text(0)
-            result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
-            self.add_children_to_parent_item(result_obj, current_item)
+    # def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
+    #     current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+    #     # Тип элемента (база, схема, таблица)
+    #     type_of_item = None
+    #
+    #     current_item = self.tree_widget.currentItem()
+    #
+    #     if current_item.parent():
+    #         if current_item.parent().parent():
+    #             if not current_item.parent().parent().parent():
+    #                 type_of_item = 'table'
+    #         else:
+    #             type_of_item = 'schema'
+    #     else:
+    #         type_of_item = 'database'
+    #
+    #
+    #     if type_of_item == 'table': return
+    #
+    #     if type_of_item == 'database':
+    #         current_connecting_settings["database"] = current_item.text(0)
+    #         result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
+    #         self.add_children_to_parent_item(result_obj, current_item)
+    #
+    #     if type_of_item == 'schema':
+    #         current_connecting_settings["database"] = current_item.text(0)
+    #         result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
+    #         self.add_children_to_parent_item(result_obj, current_item)

@@ -36,6 +36,7 @@ class ObjectTree(QtWidgets.QWidget):
         self.tree_widget.setMinimumHeight(400)
         self.tree_widget.setHeaderLabel('Objects')
         self.tree_widget.setSortingEnabled(True)
+        self.tree_widget.sortByColumn(0, QtCore.Qt.AscendingOrder)  # Сортировка
         self.tree_widget.setAnimated(True)
 
         # self.tree_widget.itemClicked.connect(partial(self.clicked_item))
@@ -122,18 +123,30 @@ class ObjectTree(QtWidgets.QWidget):
     #         self.arr_of_selected_item_in_tree.append(tmp_str)
 
     def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
+        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+        # Тип элемента (база, схема, таблица)
+        type_of_item = None
+
         current_item = self.tree_widget.currentItem()
 
-        # Тип элемента (база, схема, таблица)
-        type_of_item = check_type_of_item(current_item)
+        if current_item.parent():
+            if current_item.parent().parent():
+                if not current_item.parent().parent().parent():
+                    type_of_item = 'table'
+            else:
+                type_of_item = 'schema'
+        else:
+            type_of_item = 'database'
 
 
         if type_of_item == 'table': return
 
         if type_of_item == 'database':
-            result_obj = func_load_schemas()
+            current_connecting_settings["database"] = current_item.text(0)
+            result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
             self.add_children_to_parent_item(result_obj, current_item)
 
-
-        print(type_of_item)
-        # print(self.tree_widget.currentItem().text(0))
+        if type_of_item == 'schema':
+            current_connecting_settings["database"] = current_item.text(0)
+            result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
+            self.add_children_to_parent_item(result_obj, current_item)
