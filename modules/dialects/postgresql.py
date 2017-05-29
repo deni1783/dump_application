@@ -65,7 +65,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
         # Обработцики для дерева объектов
-        self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item, postgresql.load_schemas, postgresql.all_tables))
+        self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
+                                                           postgresql.load_schemas,
+                                                           postgresql.all_tables))
 
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
@@ -179,4 +181,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             current_connecting_settings["database"] = current_item.text(0)
             result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
             self.add_children_to_parent_item(result_obj, current_item)
-            print(current_item.childCount())
+
+        if type_of_item == 'schema':
+            current_connecting_settings["database"] = current_item.text(0)
+            result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
+            self.add_children_to_parent_item(result_obj, current_item)

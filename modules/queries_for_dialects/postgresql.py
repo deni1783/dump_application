@@ -80,13 +80,9 @@ def all_tables(obj_connection_settings, parent_db):
          information_schema.tables t
         where 
          t.table_type = 'BASE TABLE'
-
          --AND t.table_catalog = '' 
          AND t.table_schema = '{}' 
-         --AND t.table_name = 'approximatenumerics'
-
         order by
-         t.table_schema,
          t.table_name;
     """.format(parent_db)
 
