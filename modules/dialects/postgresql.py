@@ -64,6 +64,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                                                            postgresql.all_schemas,
                                                            postgresql.all_tables))
 
+        self.tree_widget.itemChanged.connect(partial(self.click_flags))
+
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
 
@@ -136,3 +138,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         selected_items = self.get_checked_items_from_tree(self.tree_widget)
         print(selected_items)
+
+    def click_flags(self):
+        current_item = self.tree_widget.currentItem()
+        print('hi', current_item)

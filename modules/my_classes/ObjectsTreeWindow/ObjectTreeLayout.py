@@ -87,7 +87,7 @@ class ObjectTree(QtWidgets.QWidget):
     # def clicked_item(self):
     #     current_item = self.tree_widget.currentItem()
     #
-    #     # Статус флага (0 - не выбран, 2 - выбран)
+    #     # Статус флага (0 - не выбран, 1 - частично выбран, 2 - выбран)
     #     checked_status = current_item.checkState(0)
     #     if checked_status == 0:
     #         current_item.setCheckState(0, QtCore.Qt.Checked)
@@ -147,7 +147,8 @@ class ObjectTree(QtWidgets.QWidget):
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
 
 
-    def get_checked_items_from_tree(self, tree_widget):
+    @staticmethod
+    def get_checked_items_from_tree(tree_widget):
         checked_items = dict()
 
         root = tree_widget.invisibleRootItem()
