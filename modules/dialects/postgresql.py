@@ -130,5 +130,9 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # print(self.arr_of_selected_item_in_tree)
         # print(self.tree_widget.selectedItems())
         # ar = self.tree_widget.selectedItems()
-        for i in range(self.tree_widget.topLevelItemCount()):
-            print(self.tree_widget.childAt(i, 0))
+        # for i in range(self.tree_widget.topLevelItemCount()):
+        #     print(i.text(0))
+        # child = self.tree_widget.childAt(1, 1)
+
+        selected_items = self.get_checked_items_from_tree(self.tree_widget)
+        print(selected_items)

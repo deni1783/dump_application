@@ -147,3 +147,32 @@ class ObjectTree(QtWidgets.QWidget):
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
 
 
+    def get_checked_items_from_tree(self, tree_widget):
+        checked_items = dict()
+
+        root = tree_widget.invisibleRootItem()
+        database_count = root.childCount()
+        for i in range(database_count):
+            database = root.child(i)
+            database_text = database.text(0)
+
+            # Если он чекнут (полность либо частично)
+            if database.checkState(0) != 0:
+                checked_items[database_text] = dict()
+
+                for s in range(database.childCount()):
+                    schema = root.child(i).child(s)
+                    schema_text = schema.text(0)
+
+                    if schema.checkState(0) != 0:
+                        checked_items[database_text][schema_text] = list()
+
+                        for t in range(schema.childCount()):
+                            table = root.child(i).child(s).child(t)
+                            table_text = table.text(0)
+
+                            if table.checkState(0) != 0:
+                                checked_items[database_text][schema_text].append(table_text)
+        return checked_items
+
+
