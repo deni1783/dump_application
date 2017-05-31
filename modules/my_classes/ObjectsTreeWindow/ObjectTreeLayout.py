@@ -8,14 +8,30 @@ def clear_parent_tree_widget_item(parent):
 
 
 def check_type_of_item(item):
-    if item.parent():
-        if item.parent().parent():
-            if not item.parent().parent().parent():
-                return 'table'
-        else:
-            return 'schema'
-    else:
-        return 'database'
+    type_is = 'top_level_item'
+    try:
+        item.parent().parent().parent().parent()
+        type_is = 'table'
+    except:
+        try:
+            item.parent().parent().parent()
+            type_is = 'schema'
+        except:
+            try:
+                item.parent().parent()
+                type_is = 'database'
+            except:
+                    pass
+    return type_is
+
+    # if item.parent():
+    #     if item.parent().parent():
+    #         if not item.parent().parent().parent():
+    #             return 'table'
+    #     else:
+    #         return 'schema'
+    # else:
+    #     return 'database'
 
 class ObjectTree(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -38,6 +54,10 @@ class ObjectTree(QtWidgets.QWidget):
         self.tree_widget.sortByColumn(0, QtCore.Qt.AscendingOrder)  # Сортировка
         self.tree_widget.setAnimated(True)
 
+        self.top_level_database = QtWidgets.QTreeWidgetItem(self.tree_widget)
+        self.top_level_database.setText(0, "Databases")
+
+
         # self.tree_widget.itemClicked.connect(partial(self.clicked_item))
         # self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item))
 
@@ -59,12 +79,11 @@ class ObjectTree(QtWidgets.QWidget):
 
 
     def add_children_to_parent_item(self, child_arr, parent):
+        parent_type = check_type_of_item(parent)
 
         # полность очищаем родитель перед добавление детей
-        if check_type_of_item(parent) == 'database' or check_type_of_item(parent) == 'schema':
+        if parent_type == 'top_level_item' or parent_type == 'database' or parent_type == 'schema':
             clear_parent_tree_widget_item(parent)
-
-        parent_type = check_type_of_item(parent)
 
         # тип детей, он используется для иконок
         if parent_type == 'database':
@@ -116,22 +135,17 @@ class ObjectTree(QtWidgets.QWidget):
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
 
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+
         # Тип элемента (база, схема, таблица)
-        type_of_item = None
-
         current_item = self.tree_widget.currentItem()
-
-        if current_item.parent():
-            if current_item.parent().parent():
-                if not current_item.parent().parent().parent():
-                    type_of_item = 'table'
-            else:
-                type_of_item = 'schema'
-        else:
-            type_of_item = 'database'
+        type_of_item = check_type_of_item(current_item)
 
 
-        if type_of_item == 'table': return
+
+        if type_of_item == 'table':
+            # Возвращаем обычный курсор и выходим
+            QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
+            return
 
         if type_of_item == 'database':
             current_connecting_settings["database"] = current_item.text(0)

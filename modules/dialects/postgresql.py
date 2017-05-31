@@ -64,7 +64,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                                                            postgresql.all_schemas,
                                                            postgresql.all_tables))
 
-        self.tree_widget.itemChanged.connect(partial(self.click_flags))
+        # self.tree_widget.itemChanged.connect(partial(self.click_flags))
 
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
@@ -118,7 +118,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Добавляем объекты в дерево
         # self.add_objects_to_tree(self.full_json_data)
         result_arr = postgresql.all_databases(current_connecting_settings)
-        self.add_children_to_parent_item(result_arr, self.tree_widget)
+        self.add_children_to_parent_item(result_arr, self.top_level_database)
 
 
         print('Custom DB ', checked_radio.text())
