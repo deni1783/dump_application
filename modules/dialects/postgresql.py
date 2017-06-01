@@ -61,6 +61,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         # Обработчики для дерева объектов
         self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
+                                                           postgresql.all_databases,
                                                            postgresql.all_schemas,
                                                            postgresql.all_tables))
 
@@ -108,17 +109,17 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         status = self.test_connection(postgresql.connect)
         if status != 'Connected': return
 
-        checked_radio = None
         # Находим выбранный тип дампа
-        for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
-            if r.isChecked():
-                checked_radio = r
-                break
+        checked_radio = self.get_selected_type_of_dump()
+        # for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
+        #     if r.isChecked():
+        #         checked_radio = r
+        #         break
 
         # Добавляем объекты в дерево
         # self.add_objects_to_tree(self.full_json_data)
-        result_arr = postgresql.all_databases(current_connecting_settings)
-        self.add_children_to_parent_item(result_arr, self.top_level_database)
+        # result_arr = postgresql.all_databases(current_connecting_settings)
+        # self.add_children_to_parent_item(result_arr, self.top_level_database)
 
 
         print('Custom DB ', checked_radio.text())

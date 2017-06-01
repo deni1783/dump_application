@@ -8,7 +8,7 @@ def clear_parent_tree_widget_item(parent):
 
 
 def check_type_of_item(item):
-    type_is = 'top_level_item'
+    type_is = 'title_tree'
     try:
         item.parent().parent().parent().parent()
         type_is = 'table'
@@ -81,17 +81,14 @@ class ObjectTree(QtWidgets.QWidget):
     def add_children_to_parent_item(self, child_arr, parent):
         parent_type = check_type_of_item(parent)
 
-        # полность очищаем родитель перед добавление детей
-        if parent_type == 'top_level_item' or parent_type == 'database' or parent_type == 'schema':
+        # тип детей, он используется для иконок
+        child_type = self.get_type_of_child(parent)
+
+        # полность очищаем родитель перед добавление детей для таблиц
+        if parent_type != 'table':
             clear_parent_tree_widget_item(parent)
 
-        # тип детей, он используется для иконок
-        if parent_type == 'database':
-            child_type = 'schema'
-        elif parent_type == 'schema':
-            child_type = 'table'
-        else:
-            child_type = 'database'
+
 
         # Добавляем детей
         for item in child_arr:
@@ -129,7 +126,7 @@ class ObjectTree(QtWidgets.QWidget):
     #     else:
     #         self.arr_of_selected_item_in_tree.append(tmp_str)
 
-    def load_child_for_item(self, func_load_schemas=None, func_load_tables=None):
+    def load_child_for_item(self, func_load_databases=None, func_load_schemas=None, func_load_tables=None):
 
         # Изменяем курсор в песочные часы
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
@@ -138,21 +135,26 @@ class ObjectTree(QtWidgets.QWidget):
 
         # Тип элемента (база, схема, таблица)
         current_item = self.tree_widget.currentItem()
-        type_of_item = check_type_of_item(current_item)
+        # type_of_item = check_type_of_item(current_item)
+        child_type = self.get_type_of_child(current_item)
 
 
 
-        if type_of_item == 'table':
-            # Возвращаем обычный курсор и выходим
-            QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
-            return
+        # if child_type == 'table':
+        #     # Возвращаем обычный курсор и выходим
+        #     QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
+        #     return
+        if child_type == 'database':
+            result_obj = func_load_databases(current_connecting_settings)
+            self.add_children_to_parent_item(result_obj, current_item)
 
-        if type_of_item == 'database':
+
+        if child_type == 'schema':
             current_connecting_settings["database"] = current_item.text(0)
             result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
             self.add_children_to_parent_item(result_obj, current_item)
 
-        if type_of_item == 'schema':
+        if child_type == 'table':
             current_connecting_settings["database"] = current_item.parent().text(0)
             result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
             self.add_children_to_parent_item(result_obj, current_item)
@@ -189,5 +191,21 @@ class ObjectTree(QtWidgets.QWidget):
                             if table.checkState(0) != 0:
                                 checked_items[database_text][schema_text].append(table_text)
         return checked_items
+
+    @staticmethod
+    def get_type_of_child(parent):
+        parent_type = check_type_of_item(parent)
+        if parent_type == 'database':
+            return 'schema'
+        elif parent_type == 'schema':
+            return 'table'
+        elif parent_type == 'title_tree':
+            return 'database'
+
+    def get_selected_type_of_dump(self):
+        for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
+            if r.isChecked():
+                return r
+
 
 

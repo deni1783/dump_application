@@ -60,10 +60,10 @@ def all_databases(obj_connection_settings):
     cursor.execute(sql_query)
     records = cursor.fetchall()
 
-    out_obj = {}
+    out_obj = []
 
     for i in records:
-        out_obj[i[0]] = {}
+        out_obj.append(i[0])
 
     return out_obj
 
