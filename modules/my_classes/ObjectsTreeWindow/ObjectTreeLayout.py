@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-from functools import partial
+# from functools import partial
 
 
 def clear_parent_tree_widget_item(parent):
@@ -24,14 +24,6 @@ def check_type_of_item(item):
                     pass
     return type_is
 
-    # if item.parent():
-    #     if item.parent().parent():
-    #         if not item.parent().parent().parent():
-    #             return 'table'
-    #     else:
-    #         return 'schema'
-    # else:
-    #     return 'database'
 
 class ObjectTree(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -135,15 +127,9 @@ class ObjectTree(QtWidgets.QWidget):
 
         # Тип элемента (база, схема, таблица)
         current_item = self.tree_widget.currentItem()
-        # type_of_item = check_type_of_item(current_item)
         child_type = self.get_type_of_child(current_item)
 
 
-
-        # if child_type == 'table':
-        #     # Возвращаем обычный курсор и выходим
-        #     QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
-        #     return
         if child_type == 'database':
             result_obj = func_load_databases(current_connecting_settings)
             self.add_children_to_parent_item(result_obj, current_item)
@@ -163,11 +149,11 @@ class ObjectTree(QtWidgets.QWidget):
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
 
 
-    @staticmethod
-    def get_checked_items_from_tree(tree_widget):
+    # @staticmethod
+    def get_checked_items_from_tree(self):
         checked_items = dict()
 
-        root = tree_widget.invisibleRootItem()
+        root = self.top_level_database
         database_count = root.childCount()
         for i in range(database_count):
             database = root.child(i)
@@ -206,6 +192,3 @@ class ObjectTree(QtWidgets.QWidget):
         for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
             if r.isChecked():
                 return r
-
-
-

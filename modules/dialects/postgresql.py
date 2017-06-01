@@ -88,12 +88,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
     def selected_default_databases(self):
-        checked_radio = None
         # Находим выбранный тип дампа
-        for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
-            if r.isChecked():
-                checked_radio = r
-                break
+        checked_radio = self.get_selected_type_of_dump()
         print('Default DB', checked_radio.text())
 
 
@@ -102,25 +98,13 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Изменяем курсор в песочные часы
         custom_functions.set_cursor_style('wait')
 
-        # Получаем текущие настройки подключения
-        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
-
         # Проверяем подключение если ошибка, выводим сообщение об ошибке
         status = self.test_connection(postgresql.connect)
-        if status != 'Connected': return
+        if status != 'Connected':
+            return
 
         # Находим выбранный тип дампа
         checked_radio = self.get_selected_type_of_dump()
-        # for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
-        #     if r.isChecked():
-        #         checked_radio = r
-        #         break
-
-        # Добавляем объекты в дерево
-        # self.add_objects_to_tree(self.full_json_data)
-        # result_arr = postgresql.all_databases(current_connecting_settings)
-        # self.add_children_to_parent_item(result_arr, self.top_level_database)
-
 
         print('Custom DB ', checked_radio.text())
 
@@ -129,15 +113,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
     def run_creating_dump(self):
-        # t = self.tree_widget.itemClicked()
-        # print(self.arr_of_selected_item_in_tree)
-        # print(self.tree_widget.selectedItems())
-        # ar = self.tree_widget.selectedItems()
-        # for i in range(self.tree_widget.topLevelItemCount()):
-        #     print(i.text(0))
-        # child = self.tree_widget.childAt(1, 1)
-
-        selected_items = self.get_checked_items_from_tree(self.tree_widget)
+        selected_items = self.get_checked_items_from_tree()
         print(selected_items)
 
     def click_flags(self):
