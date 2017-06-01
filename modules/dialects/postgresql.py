@@ -123,6 +123,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         selected_items = self.get_checked_items_from_tree()
         print(selected_items)
 
-    def click_flags(self):
-        current_item = self.tree_widget.currentItem()
-        print('hi', current_item)
+    # def click_flags(self):
+    #     current_item = self.tree_widget.currentItem()
+    #     print('hi', current_item)
