@@ -113,6 +113,13 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
     def run_creating_dump(self):
+        if not self.lbl_selected_out_dir.text():
+            error_msg = QtWidgets.QErrorMessage(self.box_conn_settings)
+            error_msg.setWindowTitle('Not selected directory')
+            error_msg.showMessage('Please select output directory and then try again')
+            error_msg.show()
+            return
+
         selected_items = self.get_checked_items_from_tree()
         print(selected_items)
 

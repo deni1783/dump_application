@@ -149,7 +149,6 @@ class ObjectTree(QtWidgets.QWidget):
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
 
 
-    # @staticmethod
     def get_checked_items_from_tree(self):
         checked_items = dict()
 

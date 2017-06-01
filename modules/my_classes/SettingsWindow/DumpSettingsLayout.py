@@ -47,15 +47,42 @@ class DumpSettings(QtWidgets.QWidget):
 
 
 
-        # Добавляем виджеты на главный экран
+
         main_wrap_hbox.addWidget(box_dump)
         main_wrap_hbox.addWidget(box_database)
+
+
+        # Выбор папки назначения для дампов
+        lbl_select_dir = QtWidgets.QLabel('Please select output directory')
+        self.btn_select_out_dir = QtWidgets.QPushButton('Directory')
+        lbl_selected_dir_is = QtWidgets.QLabel('Selected directory is:')
+        self.lbl_selected_out_dir = QtWidgets.QLabel()
+        self.lbl_selected_out_dir.setStyleSheet('QLabel {color: green;}')
+        hbox_select_dir = QtWidgets.QHBoxLayout()
+        hbox_select_dir.addWidget(lbl_select_dir)
+        hbox_select_dir.addWidget(self.btn_select_out_dir)
+
+        vbox_wrap_select_dir = QtWidgets.QVBoxLayout()
+        vbox_wrap_select_dir.addLayout(main_wrap_hbox)
+        vbox_wrap_select_dir.addLayout(hbox_select_dir)
+        vbox_wrap_select_dir.addWidget(lbl_selected_dir_is)
+        vbox_wrap_select_dir.addWidget(self.lbl_selected_out_dir)
+
+
+
 
 
         # Группа выбора тыпа дампа
         # Этот виджет используется в Родительском классе!
         self.box_type_dump = QtWidgets.QGroupBox('Settings for DUMP')
         self.box_type_dump.setAlignment(QtCore.Qt.AlignHCenter)
-        self.box_type_dump.setLayout(main_wrap_hbox)
+        self.box_type_dump.setLayout(vbox_wrap_select_dir)
 
         # self.box_type_dump.setFixedHeight(150)
+
+        # Обработчики для кнопок
+        self.btn_select_out_dir.clicked.connect(self.select_folder)
+
+    def select_folder(self):
+        folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Select folder')
+        self.lbl_selected_out_dir.setText(folder_name)
