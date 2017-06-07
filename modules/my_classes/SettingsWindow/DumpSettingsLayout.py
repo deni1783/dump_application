@@ -36,7 +36,9 @@ class DumpSettings(QtWidgets.QWidget):
         box_database.setAlignment(QtCore.Qt.AlignHCenter)
 
         self.btn_default_databases = QtWidgets.QPushButton('Default')
+        self.btn_default_databases.setDisabled(True)
         self.btn_custom_databases = QtWidgets.QPushButton('Custom')
+        self.btn_custom_databases.setDisabled(True)
 
         database_vbox = QtWidgets.QVBoxLayout()
         database_vbox.setAlignment(QtCore.Qt.AlignTop)

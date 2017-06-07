@@ -9,7 +9,7 @@ from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
 
 
-from modules.queries_for_dialects import postgresql
+from modules.queries_for_dialects import postgresql_home as postgresql
 
 class Settings(ConnectionSettings, DumpSettings, ObjectTree):
     def __init__(self, parent=None):
@@ -55,8 +55,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.btn_test_connect.clicked.connect(partial(self.test_connection, postgresql.connect))
 
         # Обработчики для кнопок выбора баз данных
-        self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
-        self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
+        # self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
+        # self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
 
 
         # Обработчики для дерева объектов

@@ -98,6 +98,7 @@ class ConnectionSettings(QtWidgets.QWidget):
         # Изменение вида кнопок
         self.btn_add_profile.setFixedWidth(100)
         self.btn_change_settings.setFixedWidth(100)
+        self.btn_change_settings.setDisabled(True)
         self.btn_test_connect.setFixedWidth(100)
 
 
