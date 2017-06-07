@@ -88,10 +88,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         wrap_full.addLayout(wrap_vbox)
         wrap_full.addWidget(self.box_object_tree)
 
-        self.mythread = MyThread()
-        self.btn_run_thread.clicked.connect(self.start_thread)
-        self.mythread.mysignal.connect(self.on_change_thread, QtCore.Qt.QueuedConnection)
-
         # Возвращаем в основной макет
         self.out_window = wrap_full
 
@@ -130,6 +126,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             return
 
         set_cursor_style('wait')
+        self.btn_run_creating_dump.setDisabled(True)
         selected_items = self.get_checked_items_from_tree()
         # print(selected_items)
         # print(self.get_list_of_chacked_items(selected_items))
@@ -140,6 +137,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.run_dump(current_connecting_settings, 'path/to/pgdump.exe',
                  list_of_selected_items, checked_radio, 'path/to/output/dir')
 
+        # self.btn_run_creating_dump.setDisabled(False)
         set_cursor_style('normal')
 
 
@@ -185,7 +183,10 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         else:
             type_d = ''
 
+        list_of_cmd = []
+
         for obj in objects:
+            self.full_obj = obj
             tmp = obj.split('.')
             database = ' -d' + wrap(tmp[0])
             schema = ' -n' + wrap(tmp[1])
@@ -196,30 +197,57 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                            + database + schema + table + ' ' + type_d
                            + out_file)
 
-            (code, stdout, stderr) = run_cmd(cmd_for_run)
-            write_to_log(dialect, obj, stdout, code, stderr)
+            list_of_cmd.append([obj, cmd_for_run])
+
+        self.mythread = MyThread(list_of_cmd)
+        self.mythread.mysignal.connect(self.on_change_thread, QtCore.Qt.QueuedConnection)
+        self.mythread.finished.connect(self.finish_thread)
+
+        self.start_thread()
+
+            # self.mythread.start()
+
+            # (code, stdout, stderr) = run_cmd(cmd_for_run)
+            # write_to_log(dialect, obj, stdout, code, stderr)
+
 
 
 
 
     def start_thread(self):
+        self.btn_run_creating_dump.setDisabled(True)
         self.mythread.start()
 
-    def on_change_thread(self, s):
-        print(s)
-        self.log_stat.setText(s)
+    def on_change_thread(self, object, code):
+        self.log_stat.setText(object + ' status code: ' + code)
+
+    def finish_thread(self):
+        write_to_log(self.dialect_name, self.mythread.object,
+                     self.mythread.stdout, self.mythread.code,
+                     self.mythread.stderr)
+        self.btn_run_creating_dump.setDisabled(False)
 
 
 class MyThread(QtCore.QThread):
-    mysignal = QtCore.pyqtSignal(str)
+    mysignal = QtCore.pyqtSignal(str, str)
 
-    def __init__(self, parent=None):
+    def __init__(self, list_of_cmd, parent=None):
         QtCore.QThread.__init__(self, parent)
+        self.list_cmd = list_of_cmd
+        self.cmd = None
+        self.code = None
+        self.stdout = None
+        self.stderr = None
+        self.object = None
 
     def run(self):
-        for i in range(20):
+        for i in self.list_cmd:
             self.sleep(2)
-            self.mysignal.emit('i = %s' % i)
+            self.object = i[0]
+            self.cmd = i[1]
+            print(self.cmd)
+            (self.code, self.stdout, self.stderr) = run_cmd(self.cmd)
+            self.mysignal.emit(self.object, str(self.code))
 
 
 
