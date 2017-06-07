@@ -1,5 +1,8 @@
 import os
 from modules.my_classes.custom_functions import wrap_double_quotes as wrap
+from modules.my_classes.custom_functions import write_to_log
+from modules.Run_dump_dialects.for_cmd import run_cmd
+
 
 def run_dump(connection_settings: dict, path_to_pgdump: str, objects: list, type_dump: str, out_dir: str):
     host = ' -h' + wrap(connection_settings['host'])
@@ -27,10 +30,19 @@ def run_dump(connection_settings: dict, path_to_pgdump: str, objects: list, type
                        + database + schema + table + ' ' + type_d
                        + out_file)
         print(cmd_for_run)
+        # (code, stdout) = run_cmd(cmd_for_run)
+        # if code:
+        #     print(stdout)
+        #     f = open('log.log', 'w')
+        #     f.write(stdout)
+    (code, stdout) = run_cmd('ls')
+    write_to_log('PostgreSQL', stdout, code)
 
 
     """
-5432
+default port is 5432
+
+
 "%pgdump$cmd%"
 - h % Server$name %
 -U % User$name %

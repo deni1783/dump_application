@@ -197,7 +197,7 @@ class ObjectTree(QtWidgets.QWidget):
         elif parent_type == 'title_tree':
             return 'database'
 
-    def get_selected_type_of_dump(self):
-        for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
-            if r.isChecked():
-                return r
+    # def get_selected_type_of_dump(self):
+    #     for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
+    #         if r.isChecked():
+    #             return r

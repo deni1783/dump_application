@@ -88,3 +88,8 @@ class DumpSettings(QtWidgets.QWidget):
     def select_folder(self):
         folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Select folder')
         self.lbl_selected_out_dir.setText(folder_name)
+
+    def get_selected_type_of_dump(self):
+        for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
+            if r.isChecked():
+                return r
