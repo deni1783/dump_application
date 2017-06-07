@@ -13,6 +13,7 @@ from modules.my_classes.custom_functions import wrap_double_quotes as wrap
 from modules.my_classes.custom_functions import write_to_log
 from modules.queries_for_dialects import postgresql_home as postgresql
 
+from modules.my_classes.My_Thread import MyThread
 
 # from modules.queries_for_dialects import postgresql as postgresql
 
@@ -134,14 +135,14 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
         list_of_selected_items = self.get_list_of_chacked_items(selected_items)
         checked_radio = self.get_selected_type_of_dump().text()
-        self.run_dump(current_connecting_settings, 'path/to/pgdump.exe',
-                 list_of_selected_items, checked_radio, 'path/to/output/dir')
+        self.start_dump(current_connecting_settings, 'path/to/pgdump.exe',
+                        list_of_selected_items, checked_radio, 'path/to/output/dir')
 
         # self.btn_run_creating_dump.setDisabled(False)
         set_cursor_style('normal')
 
 
-    def run_dump(self, connection_settings: dict, path_to_pgdump: str, objects: list, type_dump: str, out_dir: str):
+    def start_dump(self, connection_settings: dict, path_to_pgdump: str, objects: list, type_dump: str, out_dir: str):
         """
 
         :param connection_settings: Объект с парамметрами подключения
@@ -156,7 +157,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         """
             default port is 5432
 
-
             "%pgdump$cmd%"
             - h % Server$name %
             -U % User$name %
@@ -168,7 +168,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             -f % dir % % Scheme$name %.sql
         """
 
-        dialect = self.dialect_name
+        # dialect = self.dialect_name
         host = ' -h' + wrap(connection_settings['host'])
         user = ' -U' + wrap(connection_settings['user'])
         if connection_settings['port'] == 'default':
@@ -186,7 +186,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         list_of_cmd = []
 
         for obj in objects:
-            self.full_obj = obj
+            # self.full_obj = obj
             tmp = obj.split('.')
             database = ' -d' + wrap(tmp[0])
             schema = ' -n' + wrap(tmp[1])
@@ -199,18 +199,13 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
             list_of_cmd.append([obj, cmd_for_run])
 
-        self.mythread = MyThread(list_of_cmd)
+        # Создание отдельного потока
+        self.mythread = MyThread(self.dialect_name, list_of_cmd)
         self.mythread.mysignal.connect(self.on_change_thread, QtCore.Qt.QueuedConnection)
         self.mythread.finished.connect(self.finish_thread)
 
+        # Запуск отдельного потока
         self.start_thread()
-
-            # self.mythread.start()
-
-            # (code, stdout, stderr) = run_cmd(cmd_for_run)
-            # write_to_log(dialect, obj, stdout, code, stderr)
-
-
 
 
 
@@ -222,33 +217,4 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.log_stat.setText(object + ' status code: ' + code)
 
     def finish_thread(self):
-        write_to_log(self.dialect_name, self.mythread.object,
-                     self.mythread.stdout, self.mythread.code,
-                     self.mythread.stderr)
         self.btn_run_creating_dump.setDisabled(False)
-
-
-class MyThread(QtCore.QThread):
-    mysignal = QtCore.pyqtSignal(str, str)
-
-    def __init__(self, list_of_cmd, parent=None):
-        QtCore.QThread.__init__(self, parent)
-        self.list_cmd = list_of_cmd
-        self.cmd = None
-        self.code = None
-        self.stdout = None
-        self.stderr = None
-        self.object = None
-
-    def run(self):
-        for i in self.list_cmd:
-            self.sleep(2)
-            self.object = i[0]
-            self.cmd = i[1]
-            print(self.cmd)
-            (self.code, self.stdout, self.stderr) = run_cmd(self.cmd)
-            self.mysignal.emit(self.object, str(self.code))
-
-
-
-

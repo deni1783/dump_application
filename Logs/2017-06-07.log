@@ -1715,3 +1715,241 @@ Status: Fail!
 ================================================================================
 
 
+================================================================================
+Dialect: postgresql
+Object: database3.schema2.table3
+Timestamp: 2017-06-07 21:32:21.759872
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema2.table3
+Timestamp: 2017-06-07 21:33:26.488089
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table7
+Timestamp: 2017-06-07 21:34:15.456502
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table1
+Timestamp: 2017-06-07 21:43:07.321339
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table2
+Timestamp: 2017-06-07 21:43:08.332688
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table3
+Timestamp: 2017-06-07 21:43:09.342435
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table4
+Timestamp: 2017-06-07 21:43:10.352196
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table5
+Timestamp: 2017-06-07 21:43:11.364662
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table6
+Timestamp: 2017-06-07 21:43:12.372406
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database3.schema3.table7
+Timestamp: 2017-06-07 21:43:13.381999
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database4.schema4.table1
+Timestamp: 2017-06-07 21:43:14.392432
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database4.schema4.table2
+Timestamp: 2017-06-07 21:43:15.404255
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database4.schema4.table3
+Timestamp: 2017-06-07 21:43:16.414083
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database4.schema4.table4
+Timestamp: 2017-06-07 21:43:17.423165
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database4.schema4.table5
+Timestamp: 2017-06-07 21:43:18.433548
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database4.schema4.table6
+Timestamp: 2017-06-07 21:43:19.442191
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: database4.schema4.table7
+Timestamp: 2017-06-07 21:43:20.451200
+Status: Fail!
+		Error code: 127
+		Error text: /bin/sh: path/to/pgdump.exe: No such file or directory
+
+----------------------------------------
+
+
+================================================================================
+
+
