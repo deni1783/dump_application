@@ -8,6 +8,7 @@ from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 
 from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
 
+from modules.Run_dump_dialects.postgresql import run_dump
 
 from modules.queries_for_dialects import postgresql_home as postgresql
 
@@ -121,7 +122,15 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             return
 
         selected_items = self.get_checked_items_from_tree()
-        print(selected_items)
+        # print(selected_items)
+        # print(self.get_list_of_chacked_items(selected_items))
+
+        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+        list_of_selected_items = self.get_list_of_chacked_items(selected_items)
+        checked_radio = self.get_selected_type_of_dump().text()
+        run_dump(current_connecting_settings, 'path/to/pgdump.exe',
+                 list_of_selected_items, checked_radio, 'path/to/output/dir')
+
 
     # def click_flags(self):
     #     current_item = self.tree_widget.currentItem()

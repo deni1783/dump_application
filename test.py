@@ -23,3 +23,4 @@ def test():
                 return os.path.normcase(out_path)
 
 print(test())
+

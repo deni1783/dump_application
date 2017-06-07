@@ -178,6 +178,16 @@ class ObjectTree(QtWidgets.QWidget):
         return checked_items
 
     @staticmethod
+    def get_list_of_chacked_items(dict):
+        out_list = []
+        for database in dict:
+            for schema in dict[database]:
+                for table in dict[database][schema]:
+                    string = database + '.' + schema + '.' + table
+                    out_list.append(string)
+        return out_list
+
+    @staticmethod
     def get_type_of_child(parent):
         parent_type = check_type_of_item(parent)
         if parent_type == 'database':
