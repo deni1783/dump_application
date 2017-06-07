@@ -1,7 +1,8 @@
 import os
+
+from modules.my_classes.ClassForCMD.for_cmd import run_cmd
 from modules.my_classes.custom_functions import wrap_double_quotes as wrap
 from modules.my_classes.custom_functions import write_to_log
-from modules.Run_dump_dialects.for_cmd import run_cmd
 
 
 def run_dump(connection_settings: dict, path_to_pgdump: str, objects: list, type_dump: str, out_dir: str):

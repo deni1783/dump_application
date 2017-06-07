@@ -1,20 +1,19 @@
+import os
 from functools import partial
+
 from PyQt5 import QtWidgets, QtCore
 
 from modules.my_classes import custom_functions
-import os
-
+from modules.my_classes.ClassForCMD.for_cmd import run_cmd
+from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
 from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
-
-from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
-
+from modules.my_classes.custom_functions import set_cursor_style
 from modules.my_classes.custom_functions import wrap_double_quotes as wrap
 from modules.my_classes.custom_functions import write_to_log
-from modules.my_classes.custom_functions import set_cursor_style
-from modules.Run_dump_dialects.for_cmd import run_cmd
-
 from modules.queries_for_dialects import postgresql_home as postgresql
+
+
 # from modules.queries_for_dialects import postgresql as postgresql
 
 class Settings(ConnectionSettings, DumpSettings, ObjectTree):
@@ -88,6 +87,10 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         wrap_full = QtWidgets.QHBoxLayout()
         wrap_full.addLayout(wrap_vbox)
         wrap_full.addWidget(self.box_object_tree)
+
+        self.mythread = MyThread()
+        self.btn_run_thread.clicked.connect(self.start_thread)
+        self.mythread.mysignal.connect(self.on_change_thread, QtCore.Qt.QueuedConnection)
 
         # Возвращаем в основной макет
         self.out_window = wrap_full
@@ -195,4 +198,29 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
             (code, stdout, stderr) = run_cmd(cmd_for_run)
             write_to_log(dialect, obj, stdout, code, stderr)
+
+
+
+
+    def start_thread(self):
+        self.mythread.start()
+
+    def on_change_thread(self, s):
+        print(s)
+        self.log_stat.setText(s)
+
+
+class MyThread(QtCore.QThread):
+    mysignal = QtCore.pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        QtCore.QThread.__init__(self, parent)
+
+    def run(self):
+        for i in range(20):
+            self.sleep(2)
+            self.mysignal.emit('i = %s' % i)
+
+
+
 

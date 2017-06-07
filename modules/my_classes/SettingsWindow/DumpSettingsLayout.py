@@ -60,6 +60,10 @@ class DumpSettings(QtWidgets.QWidget):
         lbl_selected_dir_is = QtWidgets.QLabel('Selected directory is:')
         self.lbl_selected_out_dir = QtWidgets.QLabel()
         self.lbl_selected_out_dir.setStyleSheet('QLabel {color: green;}')
+        self.btn_run_thread = QtWidgets.QPushButton('Run Thread')
+        self.log_stat = QtWidgets.QLabel('Loging...')
+
+
         hbox_select_dir = QtWidgets.QHBoxLayout()
         hbox_select_dir.addWidget(lbl_select_dir)
         hbox_select_dir.addWidget(self.btn_select_out_dir)
@@ -69,6 +73,8 @@ class DumpSettings(QtWidgets.QWidget):
         vbox_wrap_select_dir.addLayout(hbox_select_dir)
         vbox_wrap_select_dir.addWidget(lbl_selected_dir_is)
         vbox_wrap_select_dir.addWidget(self.lbl_selected_out_dir)
+        vbox_wrap_select_dir.addWidget(self.btn_run_thread)
+        vbox_wrap_select_dir.addWidget(self.log_stat)
 
 
 
