@@ -1,0 +1,84 @@
+================================================================================
+Dialect: postgresql
+Object: database2.schema2.table3
+Timestamp: 2017-06-09 12:51:51.226971
+Status: Fail!
+		Error code: 1
+		Error text: The system cannot find the path specified.
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: DBCS_D_GREENPLUM.DBCS_D_GREENPLUM.approximatenumerics
+Timestamp: 2017-06-09 12:55:58.550688
+Status: Fail!
+		Error code: 1
+		Error text: The system cannot find the path specified.
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: DBCS_D_NETEZZA_E.DBCS_D_NETEZZA_E.exactdecimalnumerics
+Timestamp: 2017-06-09 15:26:44.925711
+Status: Fail!
+		Error code: 1
+		Error text: The system cannot find the path specified.
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: DBCS_BIG_TABLES.DBCS_BIG_TABLES.all_types_redshift_10t
+Timestamp: 2017-06-09 15:49:34.056958
+Status: Fail!
+		Error code: 1
+		Error text: The system cannot find the path specified.
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: DBCS_BIG_TABLES.DBCS_BIG_TABLES.all_types_redshift_1m_add
+Timestamp: 2017-06-09 15:49:36.093113
+Status: Fail!
+		Error code: 1
+		Error text: The system cannot find the path specified.
+
+----------------------------------------
+
+
+================================================================================
+
+
+================================================================================
+Dialect: postgresql
+Object: DBCS_BIG_TABLES.DBCS_BIG_TABLES.F_ACCOUNT_TRANSACTION_45MB_10t_md5
+Timestamp: 2017-06-09 15:49:38.154845
+Status: Fail!
+		Error code: 1
+		Error text: The system cannot find the path specified.
+
+----------------------------------------
+
+
+================================================================================
+
+

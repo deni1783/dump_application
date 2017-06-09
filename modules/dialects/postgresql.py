@@ -10,11 +10,13 @@ from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import Connectio
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 from modules.my_classes.custom_functions import set_cursor_style
 from modules.my_classes.custom_functions import wrap_double_quotes as wrap
+
+from modules.my_classes.MyThread import MyThread
 from modules.my_classes.custom_functions import write_to_log
-from modules.queries_for_dialects import postgresql_home as postgresql
+# from modules.queries_for_dialects import postgresql_home as postgresql
 
 
-# from modules.queries_for_dialects import postgresql as postgresql
+from modules.queries_for_dialects import postgresql as postgresql
 
 class Settings(ConnectionSettings, DumpSettings, ObjectTree):
     def __init__(self, parent=None):
@@ -199,7 +201,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
             list_of_cmd.append([obj, cmd_for_run])
 
-        self.mythread = MyThread(list_of_cmd)
+        self.mythread = MyThread(self.dialect_name, list_of_cmd)
         self.mythread.mysignal.connect(self.on_change_thread, QtCore.Qt.QueuedConnection)
         self.mythread.finished.connect(self.finish_thread)
 
@@ -222,32 +224,10 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.log_stat.setText(object + ' status code: ' + code)
 
     def finish_thread(self):
-        write_to_log(self.dialect_name, self.mythread.object,
-                     self.mythread.stdout, self.mythread.code,
-                     self.mythread.stderr)
+        # write_to_log(self.dialect_name, self.mythread.object,
+        #              self.mythread.stdout, self.mythread.code,
+        #              self.mythread.stderr)
         self.btn_run_creating_dump.setDisabled(False)
-
-
-class MyThread(QtCore.QThread):
-    mysignal = QtCore.pyqtSignal(str, str)
-
-    def __init__(self, list_of_cmd, parent=None):
-        QtCore.QThread.__init__(self, parent)
-        self.list_cmd = list_of_cmd
-        self.cmd = None
-        self.code = None
-        self.stdout = None
-        self.stderr = None
-        self.object = None
-
-    def run(self):
-        for i in self.list_cmd:
-            self.sleep(2)
-            self.object = i[0]
-            self.cmd = i[1]
-            print(self.cmd)
-            (self.code, self.stdout, self.stderr) = run_cmd(self.cmd)
-            self.mysignal.emit(self.object, str(self.code))
 
 
 
