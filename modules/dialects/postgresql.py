@@ -136,8 +136,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
         list_of_selected_items = self.get_list_of_chacked_items(selected_items)
         checked_radio = self.get_selected_type_of_dump().text()
-        self.run_dump(current_connecting_settings, 'path/to/pgdump.exe',
-                 list_of_selected_items, checked_radio, 'path/to/output/dir')
+        self.run_dump(current_connecting_settings, r'c:\program files\postgresql\9.5\bin\pg_dump.exe',
+                 list_of_selected_items, checked_radio, self.lbl_selected_out_dir.text())
 
         # self.btn_run_creating_dump.setDisabled(False)
         set_cursor_style('normal')
@@ -168,9 +168,18 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             -t table_name
             % Type %
             -f % dir % % Scheme$name %.sql
+            
+            Второй вариант:
+            
+            "c:\program files\postgresql\9.5\bin\pg_dump.exe" 
+            -h"VM-DBA-2008R2-5" 
+            -U"qa" 
+            -p5432 
+            -s 
+            -f"D:\data\from_dump\gp_approxima.sql" 
+            -t"\"DBCS_D_GREENPLUM\".approximatenumerics" "DBCS_D_GREENPLUM"
         """
 
-        dialect = self.dialect_name
         host = ' -h' + wrap(connection_settings['host'])
         user = ' -U' + wrap(connection_settings['user'])
         if connection_settings['port'] == 'default':
@@ -190,14 +199,32 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         for obj in objects:
             self.full_obj = obj
             tmp = obj.split('.')
-            database = ' -d' + wrap(tmp[0])
-            schema = ' -n' + wrap(tmp[1])
-            table = ' -t' + wrap(tmp[2])
-            normalize_path = os.path.normcase(out_dir + '/' + tmp[0] + '/' + tmp[1] + tmp[2])
-            out_file = ' -f' + wrap(normalize_path + '.sql')
-            cmd_for_run = (wrap(path_to_pgdump) + host + user + port
-                           + database + schema + table + ' ' + type_d
-                           + out_file)
+            database = tmp[0]
+            schema = tmp[1]
+            table = tmp[2]
+            normalize_outdir_path = os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database)
+
+            # Если папки нет, создаем
+            # Папка диалекта
+            if not os.path.isdir(os.path.normcase(out_dir + '/' + self.dialect_name)):
+                os.mkdir(os.path.normcase(out_dir + '/' + self.dialect_name))
+            # Папка схемы
+            if not os.path.isdir(os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database)):
+                os.mkdir(os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database))
+
+            out_file = normalize_outdir_path + '/' + schema + '.sql'
+            cmd_for_run = (wrap(path_to_pgdump) +
+                           host +
+                           user +
+                           port +
+                           ' ' + type_d +
+                           ' -f' + wrap(out_file) +
+                           ' -t' + '"' +
+                                r'\"' + schema + r'\"' + '.' +
+                                r'\"' + table + r'\"' +
+                                '"' +
+                           ' ' + '"' + database + '"'
+                           )
 
             list_of_cmd.append([obj, cmd_for_run])
 
