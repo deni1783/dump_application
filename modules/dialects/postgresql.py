@@ -202,17 +202,20 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             database = tmp[0]
             schema = tmp[1]
             table = tmp[2]
-            normalize_outdir_path = os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database)
+            normalize_outdir_path = os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database + '/' + schema)
 
             # Если папки нет, создаем
             # Папка диалекта
             if not os.path.isdir(os.path.normcase(out_dir + '/' + self.dialect_name)):
                 os.mkdir(os.path.normcase(out_dir + '/' + self.dialect_name))
-            # Папка схемы
+            # Папка базы
             if not os.path.isdir(os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database)):
                 os.mkdir(os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database))
+            # Папка схемы
+            if not os.path.isdir(os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database + '/' + schema)):
+                os.mkdir(os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database + '/' + schema))
 
-            out_file = normalize_outdir_path + '/' + schema + '.sql'
+            out_file = normalize_outdir_path + '/' + table + '.sql'
             cmd_for_run = (wrap(path_to_pgdump) +
                            host +
                            user +
@@ -234,14 +237,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         self.start_thread()
 
-            # self.mythread.start()
-
-            # (code, stdout, stderr) = run_cmd(cmd_for_run)
-            # write_to_log(dialect, obj, stdout, code, stderr)
-
-
-
-
 
     def start_thread(self):
         self.btn_run_creating_dump.setDisabled(True)
@@ -251,9 +246,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.log_stat.setText(object + ' status code: ' + code)
 
     def finish_thread(self):
-        # write_to_log(self.dialect_name, self.mythread.object,
-        #              self.mythread.stdout, self.mythread.code,
-        #              self.mythread.stderr)
         self.btn_run_creating_dump.setDisabled(False)
 
 
