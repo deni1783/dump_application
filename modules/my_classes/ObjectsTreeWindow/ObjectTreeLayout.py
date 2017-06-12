@@ -128,10 +128,13 @@ class ObjectTree(QtWidgets.QWidget):
         # Тип элемента (база, схема, таблица)
         current_item = self.tree_widget.currentItem()
         child_type = self.get_type_of_child(current_item)
+        print(current_item)
+        print(child_type)
 
 
         if child_type == 'database':
             result_obj = func_load_databases(current_connecting_settings)
+            print(result_obj)
             self.add_children_to_parent_item(result_obj, current_item)
 
 
