@@ -77,8 +77,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
 
-
-
+        self.btn_run_thread.clicked.connect(self.write_log)
 
         # Возвращаемая обертка
         wrap_vbox = QtWidgets.QVBoxLayout()
@@ -93,6 +92,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Возвращаем в основной макет
         self.out_window = wrap_full
 
+    def write_log(self):
+        self.txt_log.append('Test append')
 
     def selected_default_databases(self):
         # Находим выбранный тип дампа
@@ -243,7 +244,12 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.mythread.start()
 
     def on_change_thread(self, object, code):
-        self.log_stat.setText(object + ' status code: ' + code)
+        if code == '0':
+            status = 'Success'
+        else:
+            status = 'Error with code: ' + code
+        self.txt_log.append('Table ' + object + '\t Status: ' + status)
+        # self.log_stat.setText(object + ' status code: ' + code)
 
     def finish_thread(self):
         self.btn_run_creating_dump.setDisabled(False)

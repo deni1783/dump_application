@@ -63,6 +63,9 @@ class DumpSettings(QtWidgets.QWidget):
         self.btn_run_thread = QtWidgets.QPushButton('Run Thread')
         self.log_stat = QtWidgets.QLabel('Loging...')
 
+        self.txt_log = QtWidgets.QTextEdit()
+        self.txt_log.setReadOnly(True)
+
 
         hbox_select_dir = QtWidgets.QHBoxLayout()
         hbox_select_dir.addWidget(lbl_select_dir)
@@ -75,6 +78,7 @@ class DumpSettings(QtWidgets.QWidget):
         vbox_wrap_select_dir.addWidget(self.lbl_selected_out_dir)
         vbox_wrap_select_dir.addWidget(self.btn_run_thread)
         vbox_wrap_select_dir.addWidget(self.log_stat)
+        vbox_wrap_select_dir.addWidget(self.txt_log)
 
 
 
