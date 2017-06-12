@@ -28,11 +28,6 @@ class DumpSettings(QtWidgets.QWidget):
         self.line_edit_selected_out_dir = QtWidgets.QLineEdit()
         self.line_edit_selected_out_dir.setReadOnly(True)
 
-        # self.lbl_selected_out_dir.setLineWrapColumnOrWidth(200)
-        # self.lbl_selected_out_dir.setLineWrapMode(QtWidgets.QTextEdit.FixedPixelWidth)
-        # self.lbl_selected_out_dir.setWordWrapMode(QtGui.QTextOption.NoWrap)
-        # self.text_edit_selected_out_dir.setFixedHeight(40)
-
         hbox_output_dir = QtWidgets.QHBoxLayout()
         hbox_output_dir.addWidget(self.btn_select_out_dir)
         hbox_output_dir.addWidget(self.line_edit_selected_out_dir)

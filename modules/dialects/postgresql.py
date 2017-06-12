@@ -4,19 +4,14 @@ from functools import partial
 from PyQt5 import QtWidgets, QtCore
 
 from modules.my_classes import custom_functions
-from modules.my_classes.ClassForCMD.for_cmd import run_cmd
 from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
 from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
 from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
-from modules.my_classes.custom_functions import set_cursor_style
-from modules.my_classes.custom_functions import wrap_double_quotes as wrap
-
 from modules.my_classes.MyThread import MyThread
-from modules.my_classes.custom_functions import write_to_log
+
 # from modules.queries_for_dialects import postgresql_home as postgresql
-
-
 from modules.queries_for_dialects import postgresql as postgresql
+
 
 class Settings(ConnectionSettings, DumpSettings, ObjectTree):
     def __init__(self, parent=None):
@@ -132,7 +127,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             error_msg.show()
             return
 
-        set_cursor_style('wait')
+        custom_functions.set_cursor_style('wait')
         self.btn_run_creating_dump.setDisabled(True)
         selected_items = self.get_checked_items_from_tree()
         # print(selected_items)
@@ -145,10 +140,14 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                       list_of_selected_items, checked_radio, self.line_edit_selected_out_dir.text())
 
         # self.btn_run_creating_dump.setDisabled(False)
-        set_cursor_style('normal')
+        custom_functions.set_cursor_style('normal')
 
 
-    def run_dump(self, connection_settings: dict, path_to_pgdump: str, objects: list, type_dump: str, out_dir: str):
+    def run_dump(self, connection_settings: dict,
+                 path_to_pgdump: str,
+                 objects: list,
+                 type_dump: str,
+                 out_dir: str):
         """
 
         :param connection_settings: Объект с парамметрами подключения
@@ -185,8 +184,8 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             -t"\"DBCS_D_GREENPLUM\".approximatenumerics" "DBCS_D_GREENPLUM"
         """
 
-        host = ' -h' + wrap(connection_settings['host'])
-        user = ' -U' + wrap(connection_settings['user'])
+        host = ' -h' + custom_functions.wrap_double_quotes(connection_settings['host'])
+        user = ' -U' + custom_functions.wrap_double_quotes(connection_settings['user'])
         if connection_settings['port'] == 'default':
             port = ' -p' + '5432'
         else:
@@ -221,12 +220,12 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
                 os.mkdir(os.path.normcase(out_dir + '/' + self.dialect_name + '/' + database + '/' + schema))
 
             out_file = normalize_outdir_path + '/' + table + '.sql'
-            cmd_for_run = (wrap(path_to_pgdump) +
+            cmd_for_run = (custom_functions.wrap_double_quotes(path_to_pgdump) +
                            host +
                            user +
                            port +
                            ' ' + type_d +
-                           ' -f' + wrap(out_file) +
+                           ' -f' + custom_functions.wrap_double_quotes(out_file) +
                            ' -t' + '"' +
                                 r'\"' + schema + r'\"' + '.' +
                                 r'\"' + table + r'\"' +
