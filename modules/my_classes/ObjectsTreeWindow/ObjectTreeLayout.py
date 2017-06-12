@@ -71,13 +71,11 @@ class ObjectTree(QtWidgets.QWidget):
 
 
     def adding_children_for_parent(self, child_arr, parent):
-        parent_type = self.get_item_type(parent)
-
         # тип детей, он используется для иконок
         item_type = self.get_item_type(parent)
 
         # полность очищаем родитель перед добавление детей для таблиц
-        if parent_type != 'table':
+        if item_type != 'table':
             clear_parent_tree_widget_item(parent)
 
 
@@ -128,13 +126,17 @@ class ObjectTree(QtWidgets.QWidget):
 
         # Тип элемента (база, схема, таблица)
         current_item = self.tree_widget.currentItem()
-        parent_item_type = self.get_item_type(current_item)
+        item_type = self.get_item_type(current_item)
 
-        if parent_item_type == 'database':
+        if item_type == 'top_level_item':
+            item_type = self.top_level_item_type.text(0).lower()
+
+
+        if item_type == 'database':
             result_obj = func_load_databases(current_connecting_settings)
 
 
-        elif parent_item_type == 'schema':
+        elif item_type == 'schema':
             # Для диалектов которым нужно менять базу подключения
             if self.dialect_name in ('postgresql', 'greenplum'):
                 current_connecting_settings["database"] = current_item.text(0)
@@ -142,7 +144,7 @@ class ObjectTree(QtWidgets.QWidget):
             result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
 
 
-        elif parent_item_type == 'table':
+        elif item_type == 'table':
             # Для диалектов которым нужно менять базу подключения
             if self.dialect_name in ('postgresql', 'greenplum'):
                 current_connecting_settings["database"] = current_item.parent().text(0)
@@ -198,24 +200,24 @@ class ObjectTree(QtWidgets.QWidget):
                     out_list.append(string)
         return out_list
 
-    # @staticmethod
-    def get_type_of_child(self, parent):
-        parent_type = self.get_item_type(parent)
-        if parent_type == 'database':
-            return 'schema'
-        elif parent_type == 'schema':
-            return 'table'
-        elif parent_type == 'title_tree':
-            return 'database'
+    # # @staticmethod
+    # def get_type_of_child(self, parent):
+    #     parent_type = self.get_item_type(parent)
+    #     if parent_type == 'database':
+    #         return 'schema'
+    #     elif parent_type == 'schema':
+    #         return 'table'
+    #     elif parent_type == 'title_tree':
+    #         return 'database'
 
 
+
+    # Возвращает тип элемента (database, schema or table)
     def get_item_type(self, item):
 
         top_level_item = self.top_level_item_type.text(0)
 
         if top_level_item == 'Database':
-
-            type_is = 'title_tree'
             try:
                 item.parent().parent().parent()
                 type_is = 'table'
@@ -224,23 +226,15 @@ class ObjectTree(QtWidgets.QWidget):
                     item.parent().parent()
                     type_is = 'schema'
                 except:
-                    try:
-                        item.parent()
-                        type_is = 'database'
-                    except:
-                        pass
+                    type_is = 'database'
             return type_is
+
         elif top_level_item == 'Schema':
-            type_is = 'title_tree'
             try:
                 item.parent().parent()
                 type_is = 'table'
             except:
-                try:
-                    item.parent()
-                    type_is = 'schema'
-                except:
-                    pass
+                type_is = 'schema'
             return type_is
 
     # def get_selected_type_of_dump(self):
