@@ -20,6 +20,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         ObjectTree.__init__(self, parent)
 
         self.dialect_name = 'mysql'
+        self.top_level_item_type.setText(0, "Schema")
 
         self.settings = self.full_json_data[self.dialect_name]
         self.output_log = QtWidgets.QTextEdit()
@@ -58,7 +59,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
         # Обработчики для дерева объектов
-        self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
+        self.tree_widget.itemDoubleClicked.connect(partial(self.load_children_for_parent,
                                                            mysql.all_databases,
                                                            mysql.all_schemas,
                                                            mysql.all_tables))

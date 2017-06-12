@@ -33,6 +33,13 @@
       "user": "root",
       "password": "system",
       "database": ""
+    },
+    "test2": {
+      "host": "VM-DBA-2008R2-5",
+      "port": "",
+      "user": "qa",
+      "password": "qa",
+      "database": ""
     }
   },
   "redshift": {

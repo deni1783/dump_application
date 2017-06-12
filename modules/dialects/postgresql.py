@@ -62,7 +62,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
         # Обработчики для дерева объектов
-        self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
+        self.tree_widget.itemDoubleClicked.connect(partial(self.load_children_for_parent,
                                                            postgresql.all_databases,
                                                            postgresql.all_schemas,
                                                            postgresql.all_tables))

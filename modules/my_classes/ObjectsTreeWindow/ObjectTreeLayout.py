@@ -7,7 +7,7 @@ def clear_parent_tree_widget_item(parent):
         parent.removeChild(parent.child(i))
 
 
-def check_type_of_item(item):
+def get_type_of_item(item):
     type_is = 'title_tree'
     try:
         item.parent().parent().parent().parent()
@@ -46,8 +46,8 @@ class ObjectTree(QtWidgets.QWidget):
         self.tree_widget.sortByColumn(0, QtCore.Qt.AscendingOrder)  # Сортировка
         self.tree_widget.setAnimated(True)
 
-        self.top_level_database = QtWidgets.QTreeWidgetItem(self.tree_widget)
-        self.top_level_database.setText(0, "Databases")
+        self.top_level_item_type = QtWidgets.QTreeWidgetItem(self.tree_widget)
+        self.top_level_item_type.setText(0, "Database")
 
 
         # self.tree_widget.itemClicked.connect(partial(self.clicked_item))
@@ -70,8 +70,8 @@ class ObjectTree(QtWidgets.QWidget):
 
 
 
-    def add_children_to_parent_item(self, child_arr, parent):
-        parent_type = check_type_of_item(parent)
+    def adding_children_for_parent(self, child_arr, parent):
+        parent_type = get_type_of_item(parent)
 
         # тип детей, он используется для иконок
         child_type = self.get_type_of_child(parent)
@@ -118,7 +118,7 @@ class ObjectTree(QtWidgets.QWidget):
     #     else:
     #         self.arr_of_selected_item_in_tree.append(tmp_str)
 
-    def load_child_for_item(self, func_load_databases=None, func_load_schemas=None, func_load_tables=None):
+    def load_children_for_parent(self, func_load_databases=None, func_load_schemas=None, func_load_tables=None):
 
         # Изменяем курсор в песочные часы
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
@@ -128,25 +128,33 @@ class ObjectTree(QtWidgets.QWidget):
         # Тип элемента (база, схема, таблица)
         current_item = self.tree_widget.currentItem()
         child_type = self.get_type_of_child(current_item)
-        print(current_item)
-        print(child_type)
+
+        if self.top_level_item_type.text(0) == 'Database':
+            if child_type == 'database':
+                result_obj = func_load_databases(current_connecting_settings)
+                self.adding_children_for_parent(result_obj, current_item)
+
+            if child_type == 'schema':
+                current_connecting_settings["database"] = current_item.text(0)
+                result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
+                self.adding_children_for_parent(result_obj, current_item)
+
+            if child_type == 'table':
+                current_connecting_settings["database"] = current_item.parent().text(0)
+                result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
+                self.adding_children_for_parent(result_obj, current_item)
 
 
-        if child_type == 'database':
-            result_obj = func_load_databases(current_connecting_settings)
-            print(result_obj)
-            self.add_children_to_parent_item(result_obj, current_item)
+        elif self.top_level_item_type.text(0) == 'Schema':
+            if child_type == 'database':
+                result_obj = func_load_schemas(current_connecting_settings)
+                self.adding_children_for_parent(result_obj, current_item)
 
+            if child_type == 'schema':
+                # current_connecting_settings["database"] = current_item.text(0)
+                result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
+                self.adding_children_for_parent(result_obj, current_item)
 
-        if child_type == 'schema':
-            current_connecting_settings["database"] = current_item.text(0)
-            result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
-            self.add_children_to_parent_item(result_obj, current_item)
-
-        if child_type == 'table':
-            current_connecting_settings["database"] = current_item.parent().text(0)
-            result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
-            self.add_children_to_parent_item(result_obj, current_item)
 
         # Возвращаем обычный курсор
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
@@ -155,7 +163,7 @@ class ObjectTree(QtWidgets.QWidget):
     def get_checked_items_from_tree(self):
         checked_items = dict()
 
-        root = self.top_level_database
+        root = self.top_level_item_type
         database_count = root.childCount()
         for i in range(database_count):
             database = root.child(i)
@@ -192,7 +200,7 @@ class ObjectTree(QtWidgets.QWidget):
 
     @staticmethod
     def get_type_of_child(parent):
-        parent_type = check_type_of_item(parent)
+        parent_type = get_type_of_item(parent)
         if parent_type == 'database':
             return 'schema'
         elif parent_type == 'schema':

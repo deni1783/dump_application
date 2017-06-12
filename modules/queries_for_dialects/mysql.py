@@ -42,6 +42,10 @@ def connect(obj_connection_settings):
 
 
 def all_databases(obj_connection_settings):
+    pass
+
+
+def all_tables(obj_connection_settings, schema):
     # Пока будет так, для подключения нужно юзать пароль pwd
     obj_connection_settings['password'] = 'pwd'
 
@@ -49,13 +53,15 @@ def all_databases(obj_connection_settings):
         cnct = pymysql.connect(**obj_connection_settings)
     except:
         return []
+
     cursor = cnct.cursor()
     sql_query = """
-        SELECT 
-          schema_name AS name
-        FROM 
-          information_schema.SCHEMATA  
-    """
+            SELECT 
+              table_name
+            FROM information_schema.tables
+            WHERE table_type != 'VIEW'
+              AND table_schema = '{}';
+        """.format(schema)
 
     cursor.execute(sql_query)
     records = cursor.fetchall()
@@ -64,66 +70,33 @@ def all_databases(obj_connection_settings):
 
     for i in records:
         out_obj.append(i[0])
-    print(out_obj)
     return out_obj
 
 
-def all_tables(obj_connection_settings, schema):
-    import psycopg2
-    conn_string = get_full_con_str(obj_connection_settings)
+
+def all_schemas(obj_connection_settings):
+    # Пока будет так, для подключения нужно юзать пароль pwd
+    obj_connection_settings['password'] = 'pwd'
+
     try:
-        cnct = psycopg2.connect(conn_string)
+        cnct = pymysql.connect(**obj_connection_settings)
     except:
         return []
+
     cursor = cnct.cursor()
     sql_query = """
-        select
-         t.table_name as name
-        from 
-         information_schema.tables t
-        where 
-         t.table_type = 'BASE TABLE'
-         --AND t.table_catalog = '' 
-         AND t.table_schema = '{}' 
-        order by
-         t.table_name;
-    """.format(schema)
+            SELECT 
+              schema_name AS name
+            FROM 
+              information_schema.SCHEMATA  
+        """
 
     cursor.execute(sql_query)
     records = cursor.fetchall()
 
-    out_arr = []
+    out_obj = []
 
     for i in records:
-        out_arr.append(i[0])
-
-    return out_arr
-
-
-def all_schemas(obj_connection_settings, database):
-    import psycopg2
-    conn_string = get_full_con_str(obj_connection_settings)
-    try:
-        cnct = psycopg2.connect(conn_string)
-    except:
-        return []
-    cursor = cnct.cursor()
-    sql_query = """
-            select 
-                 schema_name as name
-              from information_schema.schemata
-            where
-             catalog_name = '{}'
-            order by schema_name;
-        """.format(database)
-
-    cursor.execute(sql_query)
-    records = cursor.fetchall()
-
-    out_arr = []
-
-    for i in records:
-        out_arr.append(i[0])
-
-    return out_arr
+        out_obj.append(i[0])
+    return out_obj
 

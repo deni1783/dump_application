@@ -51,10 +51,10 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         # Обработчики для кнопок выбора баз данных
         self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
-        self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
+        # self.btn_custom_databases.clicked.connect(partial(self.selected_custom_databases))
 
         # Обработчики для дерева объектов
-        self.tree_widget.itemDoubleClicked.connect(partial(self.load_child_for_item,
+        self.tree_widget.itemDoubleClicked.connect(partial(self.load_children_for_parent,
                                                            greenplum.all_databases,
                                                            greenplum.all_schemas,
                                                            greenplum.all_tables))
