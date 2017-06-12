@@ -27,7 +27,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         self.dialect_name = 'postgresql'
 
         self.settings = self.full_json_data[self.dialect_name]
-
+        self.output_log = QtWidgets.QTextEdit()
 
         # =================================================
         # Настройка профилей
@@ -77,17 +77,21 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
 
-        self.btn_run_thread.clicked.connect(self.write_log)
+        # self.btn_run_thread.clicked.connect(self.write_log)
 
         # Возвращаемая обертка
         wrap_vbox = QtWidgets.QVBoxLayout()
         wrap_vbox.addWidget(self.box_conn_settings)
-        wrap_vbox.addWidget(self.box_type_dump)
+        wrap_vbox.addWidget(self.box_dump_settings)
 
 
-        wrap_full = QtWidgets.QHBoxLayout()
-        wrap_full.addLayout(wrap_vbox)
-        wrap_full.addWidget(self.box_object_tree)
+        wrap_settings_tree = QtWidgets.QHBoxLayout()
+        wrap_settings_tree.addLayout(wrap_vbox)
+        wrap_settings_tree.addWidget(self.box_object_tree)
+
+        wrap_full = QtWidgets.QVBoxLayout()
+        wrap_full.addLayout(wrap_settings_tree)
+        wrap_full.addWidget(self.output_log)
 
         # Возвращаем в основной макет
         self.out_window = wrap_full
@@ -121,7 +125,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
 
     def run_creating_dump(self):
-        if not self.lbl_selected_out_dir.text():
+        if not self.line_edit_selected_out_dir.text():
             error_msg = QtWidgets.QErrorMessage(self.box_conn_settings)
             error_msg.setWindowTitle('Not selected directory')
             error_msg.showMessage('Please select output directory and then try again')
@@ -138,7 +142,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         list_of_selected_items = self.get_list_of_chacked_items(selected_items)
         checked_radio = self.get_selected_type_of_dump().text()
         self.run_dump(current_connecting_settings, r'c:\program files\postgresql\9.5\bin\pg_dump.exe',
-                 list_of_selected_items, checked_radio, self.lbl_selected_out_dir.text())
+                      list_of_selected_items, checked_radio, self.line_edit_selected_out_dir.text())
 
         # self.btn_run_creating_dump.setDisabled(False)
         set_cursor_style('normal')
@@ -248,7 +252,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
             status = 'Success'
         else:
             status = 'Error with code: ' + code
-        self.txt_log.append('Table ' + object + '\t Status: ' + status)
+        self.output_log.append('Table ' + object + '\t Status: ' + status)
         # self.log_stat.setText(object + ' status code: ' + code)
 
     def finish_thread(self):

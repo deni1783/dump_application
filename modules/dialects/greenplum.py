@@ -67,7 +67,7 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         # Возвращаемая обертка
         wrap_vbox = QtWidgets.QVBoxLayout()
         wrap_vbox.addWidget(self.box_conn_settings)
-        wrap_vbox.addWidget(self.box_type_dump)
+        wrap_vbox.addWidget(self.box_dump_settings)
 
         wrap_full = QtWidgets.QHBoxLayout()
         wrap_full.addLayout(wrap_vbox)
