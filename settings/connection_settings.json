@@ -49,6 +49,13 @@
       "user": "dbcs",
       "password": "Dbcs9999",
       "database": "dbcs_data_source"
+    },
+    "second_cluster": {
+      "host": "rsdbb02.cqcwekr1qlta.us-west-2.redshift.amazonaws.com",
+      "port": "5439",
+      "user": "dbcs",
+      "password": "Dbcs9999",
+      "database": "dbcs_data_source"
     }
   },
   "teradata": {

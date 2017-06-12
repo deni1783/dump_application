@@ -75,8 +75,8 @@ class ObjectTree(QtWidgets.QWidget):
         item_type = self.get_item_type(parent)
 
         # полность очищаем родитель перед добавление детей для таблиц
-        if item_type != 'table':
-            clear_parent_tree_widget_item(parent)
+        # if item_type != 'table':
+        clear_parent_tree_widget_item(parent)
 
 
 
@@ -128,29 +128,23 @@ class ObjectTree(QtWidgets.QWidget):
         current_item = self.tree_widget.currentItem()
         item_type = self.get_item_type(current_item)
 
+        # Если это верхний уровень отталкиваемся от установленного типа элемена для верхнего уровня
         if item_type == 'top_level_item':
             item_type = self.top_level_item_type.text(0).lower()
 
+        # Для диалектов которым нужно менять базу подключения изменяем парамметры подключения
+        if self.dialect_name in ('postgresql', 'greenplum'):
+            if item_type == 'schema':
+                current_connecting_settings["database"] = current_item.text(0)
+            elif item_type == 'table':
+                current_connecting_settings["database"] = current_item.parent().text(0)
 
         if item_type == 'database':
             result_obj = func_load_databases(current_connecting_settings)
-
-
         elif item_type == 'schema':
-            # Для диалектов которым нужно менять базу подключения
-            if self.dialect_name in ('postgresql', 'greenplum'):
-                current_connecting_settings["database"] = current_item.text(0)
-
             result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
-
-
         elif item_type == 'table':
-            # Для диалектов которым нужно менять базу подключения
-            if self.dialect_name in ('postgresql', 'greenplum'):
-                current_connecting_settings["database"] = current_item.parent().text(0)
-
             result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
-
         else:
             result_obj = []
 
