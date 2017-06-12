@@ -74,7 +74,7 @@ def all_tables(obj_connection_settings, schema):
 
 
 
-def all_schemas(obj_connection_settings):
+def all_schemas(obj_connection_settings, empty=None):
     # Пока будет так, для подключения нужно юзать пароль pwd
     obj_connection_settings['password'] = 'pwd'
 

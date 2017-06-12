@@ -7,22 +7,22 @@ def clear_parent_tree_widget_item(parent):
         parent.removeChild(parent.child(i))
 
 
-def get_type_of_item(item):
-    type_is = 'title_tree'
-    try:
-        item.parent().parent().parent().parent()
-        type_is = 'table'
-    except:
-        try:
-            item.parent().parent().parent()
-            type_is = 'schema'
-        except:
-            try:
-                item.parent().parent()
-                type_is = 'database'
-            except:
-                    pass
-    return type_is
+# def get_type_of_item(item):
+#     type_is = 'title_tree'
+#     try:
+#         item.parent().parent().parent().parent()
+#         type_is = 'table'
+#     except:
+#         try:
+#             item.parent().parent().parent()
+#             type_is = 'schema'
+#         except:
+#             try:
+#                 item.parent().parent()
+#                 type_is = 'database'
+#             except:
+#                     pass
+#     return type_is
 
 
 class ObjectTree(QtWidgets.QWidget):
@@ -71,10 +71,10 @@ class ObjectTree(QtWidgets.QWidget):
 
 
     def adding_children_for_parent(self, child_arr, parent):
-        parent_type = get_type_of_item(parent)
+        parent_type = self.get_item_type(parent)
 
         # тип детей, он используется для иконок
-        child_type = self.get_type_of_child(parent)
+        item_type = self.get_item_type(parent)
 
         # полность очищаем родитель перед добавление детей для таблиц
         if parent_type != 'table':
@@ -86,7 +86,7 @@ class ObjectTree(QtWidgets.QWidget):
         for item in child_arr:
             child = QtWidgets.QTreeWidgetItem(parent)
             child.setText(0, "{}".format(item))
-            child.setIcon(0, QtGui.QIcon("icons/{}.png".format(child_type)))
+            child.setIcon(0, QtGui.QIcon("icons/{}.png".format(item_type)))
             child.setFlags(child.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             child.setCheckState(0, QtCore.Qt.Unchecked)
 
@@ -118,7 +118,8 @@ class ObjectTree(QtWidgets.QWidget):
     #     else:
     #         self.arr_of_selected_item_in_tree.append(tmp_str)
 
-    def load_children_for_parent(self, func_load_databases=None, func_load_schemas=None, func_load_tables=None):
+    def load_children_for_parent(self, func_load_databases=None,
+                                 func_load_schemas=None, func_load_tables=None):
 
         # Изменяем курсор в песочные часы
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
@@ -127,34 +128,33 @@ class ObjectTree(QtWidgets.QWidget):
 
         # Тип элемента (база, схема, таблица)
         current_item = self.tree_widget.currentItem()
-        child_type = self.get_type_of_child(current_item)
+        parent_item_type = self.get_item_type(current_item)
 
-        if self.top_level_item_type.text(0) == 'Database':
-            if child_type == 'database':
-                result_obj = func_load_databases(current_connecting_settings)
-                self.adding_children_for_parent(result_obj, current_item)
+        if parent_item_type == 'database':
+            result_obj = func_load_databases(current_connecting_settings)
 
-            if child_type == 'schema':
+
+        elif parent_item_type == 'schema':
+            # Для диалектов которым нужно менять базу подключения
+            if self.dialect_name in ('postgresql', 'greenplum'):
                 current_connecting_settings["database"] = current_item.text(0)
-                result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
-                self.adding_children_for_parent(result_obj, current_item)
 
-            if child_type == 'table':
+            result_obj = func_load_schemas(current_connecting_settings, current_item.text(0))
+
+
+        elif parent_item_type == 'table':
+            # Для диалектов которым нужно менять базу подключения
+            if self.dialect_name in ('postgresql', 'greenplum'):
                 current_connecting_settings["database"] = current_item.parent().text(0)
-                result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
-                self.adding_children_for_parent(result_obj, current_item)
+
+            result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
+
+        else:
+            result_obj = []
 
 
-        elif self.top_level_item_type.text(0) == 'Schema':
-            if child_type == 'database':
-                result_obj = func_load_schemas(current_connecting_settings)
-                self.adding_children_for_parent(result_obj, current_item)
-
-            if child_type == 'schema':
-                # current_connecting_settings["database"] = current_item.text(0)
-                result_obj = func_load_tables(current_connecting_settings, current_item.text(0))
-                self.adding_children_for_parent(result_obj, current_item)
-
+        # Добавление элементов
+        self.adding_children_for_parent(result_obj, current_item)
 
         # Возвращаем обычный курсор
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.ArrowCursor)
@@ -198,15 +198,50 @@ class ObjectTree(QtWidgets.QWidget):
                     out_list.append(string)
         return out_list
 
-    @staticmethod
-    def get_type_of_child(parent):
-        parent_type = get_type_of_item(parent)
+    # @staticmethod
+    def get_type_of_child(self, parent):
+        parent_type = self.get_item_type(parent)
         if parent_type == 'database':
             return 'schema'
         elif parent_type == 'schema':
             return 'table'
         elif parent_type == 'title_tree':
             return 'database'
+
+
+    def get_item_type(self, item):
+
+        top_level_item = self.top_level_item_type.text(0)
+
+        if top_level_item == 'Database':
+
+            type_is = 'title_tree'
+            try:
+                item.parent().parent().parent()
+                type_is = 'table'
+            except:
+                try:
+                    item.parent().parent()
+                    type_is = 'schema'
+                except:
+                    try:
+                        item.parent()
+                        type_is = 'database'
+                    except:
+                        pass
+            return type_is
+        elif top_level_item == 'Schema':
+            type_is = 'title_tree'
+            try:
+                item.parent().parent()
+                type_is = 'table'
+            except:
+                try:
+                    item.parent()
+                    type_is = 'schema'
+                except:
+                    pass
+            return type_is
 
     # def get_selected_type_of_dump(self):
     #     for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):
