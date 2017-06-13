@@ -132,7 +132,7 @@ class DumpSettings(QtWidgets.QWidget):
         self.btn_select_out_dir.clicked.connect(self.select_folder)
 
     def select_folder(self):
-        folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Select folder')
+        folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Select folder', directory='/home')
         self.line_edit_selected_out_dir.setText(folder_name)
 
     def get_selected_type_of_dump(self):
