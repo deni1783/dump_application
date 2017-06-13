@@ -39,8 +39,8 @@ class ObjectTree(QtWidgets.QWidget):
 
         # Дерево выгруженных объектов
         self.tree_widget = QtWidgets.QTreeWidget()
-        self.tree_widget.setMinimumWidth(300)
-        self.tree_widget.setMinimumHeight(400)
+        # self.tree_widget.setMinimumWidth(300)
+        # self.tree_widget.setMinimumHeight(400)
         self.tree_widget.setHeaderLabel('Objects')
         self.tree_widget.setSortingEnabled(True)
         self.tree_widget.sortByColumn(0, QtCore.Qt.AscendingOrder)  # Сортировка

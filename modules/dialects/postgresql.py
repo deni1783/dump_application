@@ -10,7 +10,7 @@ from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 from modules.my_classes.MyThread import MyThread
 
 # from modules.queries_for_dialects import postgresql_home as postgresql
-from modules.queries_for_dialects import postgresql as postgresql
+from modules.queries_for_dialects import postgresql
 
 
 class Settings(ConnectionSettings, DumpSettings, ObjectTree):

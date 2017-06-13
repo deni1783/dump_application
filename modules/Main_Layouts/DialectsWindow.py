@@ -33,15 +33,14 @@ class DialectsLayout(QtWidgets.QWidget):
             self.dialects_obj[i] = QtWidgets.QPushButton(i)
             vbox.addWidget(self.dialects_obj[i])
 
-        out_box = QtWidgets.QGroupBox('Dialects')
-        out_box.setAlignment(QtCore.Qt.AlignHCenter)
-        out_box.setStyleSheet('QGroupBox {'
-                              'font-size: 14px;'
-                              'font-weight: bold;'
-                              'padding-top: 30px;'
-                              'margin-top:10px'
-                              '}')
-        # out_box.setFixedWidth(180)
+        out_box = QtWidgets.QGroupBox()
+        # out_box.setAlignment(QtCore.Qt.AlignHCenter)
+        # out_box.setStyleSheet('QGroupBox {'
+        #                       'font-size: 14px;'
+        #                       'font-weight: bold;'
+        #                       'padding-top: 30px;'
+        #                       'margin-top:10px'
+        #                       '}')
         out_box.setLayout(vbox)
 
         # Возвращаем в основной макет
