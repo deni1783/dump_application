@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 from modules.Layouts.MainWindow import MainLayout
 
@@ -20,6 +20,8 @@ if __name__ == '__main__':
 
     # settings_box - окно настроек и дерева для диалекта
     window.settings_box.setMinimumWidth(800)
+    window.settings_box.setAlignment(QtCore.Qt.AlignHCenter)
+    window.settings_box.setFlat(True)
 
     window.show()
 

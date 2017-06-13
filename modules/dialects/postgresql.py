@@ -1,10 +1,8 @@
 from functools import partial
-
 from PyQt5 import QtWidgets, QtCore
-from modules.Layouts.PartsForSettingsWindow.DumpSettingsLayout import DumpSettings
 
-from modules.Layouts.PartsForSettingsWindow.ConnectionSettingsLayout import ConnectionSettings
-from modules.Layouts.PartsForSettingsWindow.ObjectTreeLayout import ObjectTree
+from modules.Layouts.PartsForSettingsWindow.GroupedLayouts import GroupAllSettings
+
 from modules.Run_dump_dialects.postgresql import get_list_of_cmd
 from modules.my_classes import custom_functions
 from modules.my_classes.MyThread import MyThread
@@ -12,44 +10,48 @@ from modules.my_classes.MyThread import MyThread
 from modules.queries_for_dialects import postgresql
 
 
-class Settings(ConnectionSettings, DumpSettings, ObjectTree):
+class Settings(GroupAllSettings):
     def __init__(self, parent=None):
-        ConnectionSettings.__init__(self, parent)
-        DumpSettings.__init__(self, parent)
-        ObjectTree.__init__(self, parent)
+        GroupAllSettings.__init__(self, parent)
 
+        # ===============================================
+        # Изменяемые параметры
+        # \/ ========================================= \/
+
+
+        # Обязательно устанавливаем название диалекта
         self.dialect_name = 'postgresql'
 
-        self.settings = self.full_json_data[self.dialect_name]
-        self.output_log = QtWidgets.QTextEdit()
+        # Устанавливаем тип элемента верхнего уровня в дереве объектов
+        # self.top_level_item_type.setText(0, "Database")  # по-умолчанию
+        # self.top_level_item_type.setText(0, "Schema")
+
+
+        # Устанавливаем необходимые функции для работы с базой
+        query_test_connection = postgresql.connect
+        query_load_databases = postgresql.all_databases
+        query_load_schemes = postgresql.all_schemas
+        query_load_tables = postgresql.all_tables
+
+
+        # /\ ========================================= /\
+        # Изменяемые параметры
+        # ===============================================
+
+
+
+        # Заполняем параметры профилей
+        self.prepare_settings_for_profile(self.dialect_name)
+
+
+
 
         # =================================================
-        # Настройка профилей
-        # =================================================
-
-        # Получаем список сохраненних профилей из настроек
-        list_profiles = []
-        for prof in self.settings:
-            list_profiles.append(prof)
-
-        # Заполняем список доступными профилями
-        self.combo_box_list_profiles.addItems(list_profiles)
-
-        # Получаем изначально активированный профиль
-        activated_profile = self.combo_box_list_profiles.currentText()
-
-        # Устанавливаем значения профиля
-        profile = self.settings[activated_profile]
-
-        # изменяем значения настроек подключения
-        self.change_settings_values(profile)
-
-        # =================================================
-        # Устанавливае обработчики на кнопки
+        # Устанавливаем обработчики на кнопки
         # =================================================
 
         # Проверка соединения
-        self.btn_test_connect.clicked.connect(partial(self.test_connection, postgresql.connect))
+        self.btn_test_connect.clicked.connect(partial(self.test_connection, query_test_connection))
 
         # Обработчики для кнопок выбора баз данных
         # self.btn_default_databases.clicked.connect(partial(self.selected_default_databases))
@@ -58,35 +60,15 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
 
         # Обработчики для дерева объектов
         self.tree_widget.itemDoubleClicked.connect(partial(self.load_children_for_parent,
-                                                           postgresql.all_databases,
-                                                           postgresql.all_schemas,
-                                                           postgresql.all_tables))
+                                                           query_load_databases,
+                                                           query_load_schemes,
+                                                           query_load_tables))
 
-        # self.tree_widget.itemChanged.connect(partial(self.click_flags))
 
         # Запуск дампа
         self.btn_run_creating_dump.clicked.connect(partial(self.run_creating_dump))
 
-        # self.btn_run_thread.clicked.connect(self.write_log)
 
-        # Возвращаемая обертка
-        wrap_vbox = QtWidgets.QVBoxLayout()
-        wrap_vbox.addWidget(self.box_conn_settings)
-        wrap_vbox.addWidget(self.box_dump_settings)
-
-        wrap_settings_tree = QtWidgets.QHBoxLayout()
-        wrap_settings_tree.addLayout(wrap_vbox)
-        wrap_settings_tree.addWidget(self.box_object_tree)
-
-        wrap_full = QtWidgets.QVBoxLayout()
-        wrap_full.addLayout(wrap_settings_tree)
-        wrap_full.addWidget(self.output_log)
-
-        # Возвращаем в основной макет
-        self.out_window = wrap_full
-
-    def write_log(self):
-        self.txt_log.append('Test append')
 
     def selected_default_databases(self):
         # Находим выбранный тип дампа
@@ -122,8 +104,6 @@ class Settings(ConnectionSettings, DumpSettings, ObjectTree):
         custom_functions.set_cursor_style('wait')
         self.btn_run_creating_dump.setDisabled(True)
         selected_items = self.get_checked_items_from_tree()
-        # print(selected_items)
-        # print(self.get_list_of_chacked_items(selected_items))
 
         current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
         list_of_selected_items = self.get_list_of_chacked_items(selected_items)
