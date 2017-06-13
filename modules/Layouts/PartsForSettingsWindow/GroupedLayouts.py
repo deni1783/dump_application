@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 from modules.Layouts.PartsForSettingsWindow import ConnectionSettingsLayout, DumpSettingsLayout, ObjectTreeLayout
 
 
@@ -12,24 +12,54 @@ class GroupAllSettings(ConnectionSettingsLayout.ConnectionSettings,
 
 
         # Виджет для вывода лога
-        self.output_log = QtWidgets.QTextEdit()
-        self.output_log.setText('Output...')
-        self.output_log.setStyleSheet("color: #777777")
-        self.output_log.setReadOnly(True)
-        self.output_log.setMaximumHeight(100)
+        self.txt_edit_output_log = QtWidgets.QTextEdit()
 
-        wrap_vbox = QtWidgets.QVBoxLayout()
-        wrap_vbox.addWidget(self.box_conn_settings)
-        wrap_vbox.addWidget(self.box_dump_settings)
+        vbox_connection_and_dump_settings = QtWidgets.QVBoxLayout()
+        vbox_connection_and_dump_settings.addWidget(self.box_conn_settings)
+        vbox_connection_and_dump_settings.addWidget(self.box_dump_settings)
 
-        wrap_settings_tree = QtWidgets.QHBoxLayout()
-        wrap_settings_tree.addLayout(wrap_vbox)
-        wrap_settings_tree.addWidget(self.box_object_tree)
+        self.box_con_dump_settings = QtWidgets.QGroupBox()
+        self.box_con_dump_settings.setLayout(vbox_connection_and_dump_settings)
+
+        hbox_grouped_con_dump_tree_objects = QtWidgets.QHBoxLayout()
+        hbox_grouped_con_dump_tree_objects.addWidget(self.box_con_dump_settings)
+        hbox_grouped_con_dump_tree_objects.addWidget(self.box_object_tree)
 
         # out_window возвращается в интерфейс
         self.out_window = QtWidgets.QVBoxLayout()
-        self.out_window.addLayout(wrap_settings_tree)
-        self.out_window.addWidget(self.output_log)
+        self.out_window.addLayout(hbox_grouped_con_dump_tree_objects)
+        self.out_window.addWidget(self.txt_edit_output_log)
+
+
+
+
+
+
+        # =================================================
+        # Устанавливаем стили оформления виджетов
+        # =================================================
+        # self.box_conn_settings     - гр бокс настроек подключения
+        # self.box_dump_settings     - гр бокс настроек дампа
+
+        # self.box_con_dump_settings - гр бокс настроек подключения и дампа
+
+        # self.box_object_tree       - гр бокс настроек дерева
+        # self.txt_edit_output_log   - виджет лога
+
+        vbox_connection_and_dump_settings.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+        hbox_grouped_con_dump_tree_objects.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+
+        self.box_con_dump_settings.setFixedWidth(350)
+        self.box_con_dump_settings.setFlat(True)
+
+
+
+        # виджет лога
+        self.txt_edit_output_log.setText('Output...')
+        self.txt_edit_output_log.setStyleSheet("color: #777777")
+        self.txt_edit_output_log.setReadOnly(True)
+        self.txt_edit_output_log.setMaximumHeight(100)
+
 
     def prepare_settings_for_profile(self, dialect_name):
         # Получаем необходимые настройки

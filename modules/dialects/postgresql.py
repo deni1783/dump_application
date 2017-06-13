@@ -7,7 +7,7 @@ from modules.Run_dump_dialects.postgresql import get_list_of_cmd
 from modules.my_classes import custom_functions
 from modules.my_classes.MyThread import MyThread
 # from modules.queries_for_dialects import postgresql_home as postgresql
-from modules.queries_for_dialects import postgresql
+from modules.queries_for_dialects import postgresql  # Изменить на нужный модуль
 
 
 class Settings(GroupAllSettings):
@@ -42,9 +42,6 @@ class Settings(GroupAllSettings):
 
         # Заполняем параметры профилей
         self.prepare_settings_for_profile(self.dialect_name)
-
-
-
 
         # =================================================
         # Устанавливаем обработчики на кнопки
@@ -227,7 +224,7 @@ class Settings(GroupAllSettings):
             status = 'Success'
         else:
             status = 'Error with code: ' + code
-        self.output_log.append('Table ' + object + '\t Status: ' + status)
+        self.txt_edit_output_log.append('Table ' + object + '\t Status: ' + status)
         # self.log_stat.setText(object + ' status code: ' + code)
 
     def finish_thread(self):
