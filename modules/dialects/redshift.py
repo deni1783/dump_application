@@ -2,13 +2,12 @@ import os
 from functools import partial
 
 from PyQt5 import QtWidgets, QtCore
+from modules.Layouts.PartsForSettingsWindow.DumpSettingsLayout import DumpSettings
 
+from modules.Layouts.PartsForSettingsWindow.ConnectionSettingsLayout import ConnectionSettings
+from modules.Layouts.PartsForSettingsWindow.ObjectTreeLayout import ObjectTree
 from modules.my_classes import custom_functions
-from modules.my_classes.ObjectsTreeWindow.ObjectTreeLayout import ObjectTree
-from modules.my_classes.SettingsWindow.ConnectionSettingsLayout import ConnectionSettings
-from modules.my_classes.SettingsWindow.DumpSettingsLayout import DumpSettings
 from modules.my_classes.MyThread import MyThread
-
 # from modules.queries_for_dialects import postgresql_home as postgresql
 from modules.queries_for_dialects import redshift
 
