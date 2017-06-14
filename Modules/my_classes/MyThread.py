@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
-from modules.my_classes.ClassForCMD.for_cmd import run_cmd
-from modules.my_classes.custom_functions import write_to_log
+from Modules.my_classes.ClassForCMD.for_cmd import run_cmd
+from Modules.my_classes.custom_functions import write_to_log
 
 
 

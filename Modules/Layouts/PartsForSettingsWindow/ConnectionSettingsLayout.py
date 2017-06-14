@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 import json
 from functools import partial
-from modules.my_classes import custom_functions
+from Modules.my_classes import custom_functions
 
 class ConnectionSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):

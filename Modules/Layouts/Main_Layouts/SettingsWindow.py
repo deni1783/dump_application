@@ -1,10 +1,11 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 
 # Новые диалекты добавляем в импорт
-from modules.dialects import (
+from Modules.Dialect.UI_window import (
     oracle, ms_sql_server, redshift, sybase, mysql, db2, teradata,
-    postgresql, greenplum, netezza
+    greenplum, netezza
 )
+from Modules.Dialect.UI_window import postgresql
 
 
 class SettingsLayout(QtWidgets.QWidget):
@@ -12,7 +13,7 @@ class SettingsLayout(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
 
         # Для каждого диалекта добавляем условия и соответствующие классы
-        # в папку modules/dialects
+        # в папку Modules/Dialect
         if dialect_name.lower() == 'oracle':
             wrap_vbox = oracle.Settings().out_window
         elif dialect_name.lower() == 'ms sql server':

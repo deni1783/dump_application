@@ -1,5 +1,5 @@
 import os
-from modules.my_classes import custom_functions
+from Modules.my_classes import custom_functions
 
 
 def get_list_of_cmd(dialect_name: str, connection_settings: dict,

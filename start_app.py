@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 
-from modules.Layouts.MainWindow import MainLayout
+from Modules.Layouts.MainWindow import MainLayout
 
 if __name__ == '__main__':
     import sys

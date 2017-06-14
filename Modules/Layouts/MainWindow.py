@@ -1,10 +1,10 @@
 from functools import partial
 
 from PyQt5 import QtWidgets
-from modules.Layouts.Main_Layouts.SettingsWindow import SettingsLayout
+from Modules.Layouts.Main_Layouts.SettingsWindow import SettingsLayout
 
-from modules.Layouts.Main_Layouts.DialectsWindow import DialectsLayout
-from modules.my_classes import custom_functions
+from Modules.Layouts.Main_Layouts.DialectsWindow import DialectsLayout
+from Modules.my_classes import custom_functions
 
 
 class MainLayout(QtWidgets.QWidget):

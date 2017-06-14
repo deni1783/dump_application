@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from modules.Layouts.PartsForSettingsWindow import ConnectionSettingsLayout, DumpSettingsLayout, ObjectTreeLayout
+from Modules.Layouts.PartsForSettingsWindow import ConnectionSettingsLayout, DumpSettingsLayout, ObjectTreeLayout
 
 
 class GroupAllSettings(ConnectionSettingsLayout.ConnectionSettings,
