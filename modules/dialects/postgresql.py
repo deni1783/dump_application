@@ -6,8 +6,8 @@ from modules.Layouts.PartsForSettingsWindow.GroupedLayouts import GroupAllSettin
 from modules.Run_dump_dialects.postgresql import get_list_of_cmd
 from modules.my_classes import custom_functions
 from modules.my_classes.MyThread import MyThread
-# from modules.queries_for_dialects import postgresql_home as postgresql
-from modules.queries_for_dialects import postgresql  # Изменить на нужный модуль
+from modules.queries_for_dialects import dummy_queries as postgresql
+# from modules.queries_for_dialects import postgresql  # Изменить на нужный модуль
 
 
 class Settings(GroupAllSettings):
