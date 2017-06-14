@@ -33,11 +33,25 @@
       "user": "root",
       "password": "system",
       "database": ""
+    },
+    "test2": {
+      "host": "VM-DBA-2008R2-5",
+      "port": "",
+      "user": "qa",
+      "password": "qa",
+      "database": ""
     }
   },
   "redshift": {
     "default": {
       "host": "rsdbb01.cqcwekr1qlta.us-west-2.redshift.amazonaws.com",
+      "port": "5439",
+      "user": "dbcs",
+      "password": "Dbcs9999",
+      "database": "dbcs_data_source"
+    },
+    "second_cluster": {
+      "host": "rsdbb02.cqcwekr1qlta.us-west-2.redshift.amazonaws.com",
       "port": "5439",
       "user": "dbcs",
       "password": "Dbcs9999",

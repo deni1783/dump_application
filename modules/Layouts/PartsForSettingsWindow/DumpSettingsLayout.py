@@ -1,16 +1,46 @@
-from PyQt5 import QtWidgets, QtCore
-
-
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 class DumpSettings(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+
+        lbl_type_dump = QtWidgets.QLabel('Type of dump is:')
+
+        self.radio_only_data_type = QtWidgets.QRadioButton('Only Data')
+        self.radio_only_schema_type = QtWidgets.QRadioButton('Only Schema')
+        self.radio_only_schema_type.setChecked(True)
+        self.radio_both_type = QtWidgets.QRadioButton('Data and Schema')
+
+
+        vbox_type_dump = QtWidgets.QVBoxLayout()
+        vbox_type_dump.addWidget(self.radio_only_data_type)
+        vbox_type_dump.addWidget(self.radio_only_schema_type)
+        vbox_type_dump.addWidget(self.radio_both_type)
+
+        hbox_type_dump = QtWidgets.QHBoxLayout()
+        hbox_type_dump.addWidget(lbl_type_dump)
+        hbox_type_dump.addLayout(vbox_type_dump)
+
+
+
+        self.btn_select_out_dir = QtWidgets.QPushButton('Pick output dir')
+        self.line_edit_selected_out_dir = QtWidgets.QLineEdit()
+        self.line_edit_selected_out_dir.setReadOnly(True)
+
+        hbox_output_dir = QtWidgets.QHBoxLayout()
+        hbox_output_dir.addWidget(self.btn_select_out_dir)
+        hbox_output_dir.addWidget(self.line_edit_selected_out_dir)
+
+        self.btn_default_databases = QtWidgets.QPushButton('Choice default list of database')
+        self.btn_default_databases.setDisabled(True)
+
+        """
         # Обортка в которую добавляем виджеты она присваивается box_type_dump
         main_wrap_hbox = QtWidgets.QHBoxLayout()
 
         # Группа выбора типа дампа
-        box_dump = QtWidgets.QGroupBox('Type of the dump')
+        box_dump = QtWidgets.QGroupBox('Type of the dump is')
         box_dump.setFlat(True)
         box_dump.setAlignment(QtCore.Qt.AlignHCenter)
 
@@ -63,6 +93,9 @@ class DumpSettings(QtWidgets.QWidget):
         self.btn_run_thread = QtWidgets.QPushButton('Run Thread')
         self.log_stat = QtWidgets.QLabel('Loging...')
 
+        self.txt_log = QtWidgets.QTextEdit()
+        self.txt_log.setReadOnly(True)
+
 
         hbox_select_dir = QtWidgets.QHBoxLayout()
         hbox_select_dir.addWidget(lbl_select_dir)
@@ -75,16 +108,23 @@ class DumpSettings(QtWidgets.QWidget):
         vbox_wrap_select_dir.addWidget(self.lbl_selected_out_dir)
         vbox_wrap_select_dir.addWidget(self.btn_run_thread)
         vbox_wrap_select_dir.addWidget(self.log_stat)
+        vbox_wrap_select_dir.addWidget(self.txt_log)
 
 
 
-
+        """
+        # Представление для добавления виджетов
+        vbox_dump_settings = QtWidgets.QVBoxLayout()
+        vbox_dump_settings.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+        vbox_dump_settings.addLayout(hbox_type_dump)
+        vbox_dump_settings.addLayout(hbox_output_dir)
+        vbox_dump_settings.addWidget(self.btn_default_databases)
 
         # Группа выбора тыпа дампа
         # Этот виджет используется в Родительском классе!
-        self.box_type_dump = QtWidgets.QGroupBox('Settings for DUMP')
-        self.box_type_dump.setAlignment(QtCore.Qt.AlignHCenter)
-        self.box_type_dump.setLayout(vbox_wrap_select_dir)
+        self.box_dump_settings = QtWidgets.QGroupBox('Settings for DUMP')
+        self.box_dump_settings.setAlignment(QtCore.Qt.AlignHCenter)
+        self.box_dump_settings.setLayout(vbox_dump_settings)
 
         # self.box_type_dump.setFixedHeight(150)
 
@@ -92,8 +132,8 @@ class DumpSettings(QtWidgets.QWidget):
         self.btn_select_out_dir.clicked.connect(self.select_folder)
 
     def select_folder(self):
-        folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Select folder')
-        self.lbl_selected_out_dir.setText(folder_name)
+        folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Select folder', directory='/home')
+        self.line_edit_selected_out_dir.setText(folder_name)
 
     def get_selected_type_of_dump(self):
         for r in (self.radio_only_data_type, self.radio_only_schema_type, self.radio_both_type):

@@ -10,9 +10,6 @@ from modules.dialects import (
 class SettingsLayout(QtWidgets.QWidget):
     def __init__(self, dialect_name: str, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self.initUI(dialect_name)
-
-    def initUI(self, dialect_name: str):
 
         # Для каждого диалекта добавляем условия и соответствующие классы
         # в папку modules/dialects
@@ -44,8 +41,8 @@ class SettingsLayout(QtWidgets.QWidget):
             wrap_vbox.addWidget(err_lbl)
 
         out_box = QtWidgets.QGroupBox()
-        out_box.setFlat(True)
-        out_box.setAlignment(QtCore.Qt.AlignHCenter)
+        # out_box.setFlat(True)
+        # out_box.setAlignment(QtCore.Qt.AlignHCenter)
         out_box.setLayout(wrap_vbox)
 
 

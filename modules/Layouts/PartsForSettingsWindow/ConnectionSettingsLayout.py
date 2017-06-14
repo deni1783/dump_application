@@ -14,6 +14,7 @@ class ConnectionSettings(QtWidgets.QWidget):
         # self.btn_save_profile.setFixedWidth(150)
         self.btn_save_profile.setDisabled(True)
 
+        # Окно создания нового профиля настроек
         self.line_new_profile_name_value = QtWidgets.QLineEdit()
         self.line_new_profile_name_value.textChanged[str].connect(self.activate_save_profile_btn)
         self.line_host_value = QtWidgets.QLineEdit()
@@ -31,9 +32,9 @@ class ConnectionSettings(QtWidgets.QWidget):
 
 
         # Обертка для выбора профиля настроек
-        self.lbl_profile = QtWidgets.QLabel('Selected profile is')
+        self.lbl_profile = QtWidgets.QLabel('Profile: ')
         self.combo_box_list_profiles = QtWidgets.QComboBox()
-        self.combo_box_list_profiles.setFixedWidth(150)
+        # self.combo_box_list_profiles.setFixedWidth(150)
 
         self.hbox_profile = QtWidgets.QHBoxLayout()
         self.hbox_profile.setAlignment(QtCore.Qt.AlignHCenter)
