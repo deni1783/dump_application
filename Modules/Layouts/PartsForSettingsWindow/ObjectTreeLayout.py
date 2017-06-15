@@ -84,7 +84,7 @@ class ObjectTree(QtWidgets.QWidget):
         for item in child_arr:
             child = QtWidgets.QTreeWidgetItem(parent)
             child.setText(0, "{}".format(item))
-            child.setIcon(0, QtGui.QIcon("icons/{}.png".format(item_type)))
+            child.setIcon(0, QtGui.QIcon("Icons/{}.png".format(item_type)))
             child.setFlags(child.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             child.setCheckState(0, QtCore.Qt.Unchecked)
 

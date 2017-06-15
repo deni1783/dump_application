@@ -1,8 +1,18 @@
 from PyQt5 import QtWidgets, QtCore
 import os
 from datetime import datetime
+import json
 
+# Прочитать и вернуть массив списка диалектов
+def get_all_dialects_from_json(json_file):
+    dialects = []
+    data = open(json_file).read()
+    json_data = json.loads(data)
 
+    for dt_name in json_data['List_of_dialects']:
+        dialects.append(dt_name)
+
+    return dialects
 
 def clear_widget(obj):
     """

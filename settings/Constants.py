@@ -1,0 +1,1 @@
+PATH_TO_DIALECT_JSON = 'settings/dialects.json'
