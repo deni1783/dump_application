@@ -1,16 +1,14 @@
 import os
 from Modules.my_classes import custom_functions
-
+from settings import Constants
 
 def get_list_of_cmd(dialect_name: str, connection_settings: dict,
-                    path_to_pgdump: str,
                     objects: list,
                     type_dump: str,
                     out_dir: str):
     """
     :param dialect_name: Название диалекта (для логирования)
     :param connection_settings: Объект с парамметрами подключения
-    :param path_to_pgdump: Абсолютный путь к pgdump.exe
     :param objects: Массив объектов для которых необходимо сделать ДАМП
             [database1.schema1.table1, database3.schema1.table5]
     :param type_dump: Строковое значение типа дампа "Only Data, Only Schema, Data and Schema"
@@ -78,7 +76,7 @@ def get_list_of_cmd(dialect_name: str, connection_settings: dict,
             os.mkdir(os.path.normcase(out_dir + '/' + dialect_name + '/' + database + '/' + schema))
 
         out_file = normalize_outdir_path + '/' + table + '.sql'
-        cmd_for_run = (custom_functions.wrap_double_quotes(path_to_pgdump) +
+        cmd_for_run = (custom_functions.wrap_double_quotes(Constants.PATH_TO_PGDUMP) +
                        host +
                        user +
                        port +

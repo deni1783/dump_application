@@ -157,32 +157,45 @@ class ObjectTree(QtWidgets.QWidget):
 
 
     def get_checked_items_from_tree(self):
+        if self.top_level_item_type.text(0) == 'Database':
+            return self.items_if_database_top_lvl(self.top_level_item_type)
+        else:
+            return self.items_if_schema_top_lvl(self.top_level_item_type)
+
+
+    @staticmethod
+    def items_if_database_top_lvl(root_item):
+
         checked_items = dict()
 
-        root = self.top_level_item_type
-        database_count = root.childCount()
+        database_count = root_item.childCount()
         for i in range(database_count):
-            database = root.child(i)
+            database = root_item.child(i)
             database_text = database.text(0)
 
-            # Если он чекнут (полность либо частично)
-            if database.checkState(0) != 0:
+            # Если он чекнут
+            # 1 - частично, 2 - полностью
+            if database.checkState(0) !=0:
                 checked_items[database_text] = dict()
 
                 for s in range(database.childCount()):
-                    schema = root.child(i).child(s)
+                    schema = root_item.child(i).child(s)
                     schema_text = schema.text(0)
 
                     if schema.checkState(0) != 0:
                         checked_items[database_text][schema_text] = list()
 
                         for t in range(schema.childCount()):
-                            table = root.child(i).child(s).child(t)
+                            table = root_item.child(i).child(s).child(t)
                             table_text = table.text(0)
 
                             if table.checkState(0) != 0:
                                 checked_items[database_text][schema_text].append(table_text)
         return checked_items
+
+    @staticmethod
+    def items_if_schema_top_lvl(root_item):
+        pass
 
     @staticmethod
     def get_list_of_chacked_items(dict):
