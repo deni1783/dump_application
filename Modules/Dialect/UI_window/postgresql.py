@@ -23,15 +23,15 @@ class Settings(GroupAllSettings):
         self.dialect_name = 'postgresql'
 
         # Устанавливаем тип элемента верхнего уровня в дереве объектов
-        # self.top_level_item_type.setText(0, "Database")  # по-умолчанию
+        self.top_level_item_type.setText(0, "Database")  # по-умолчанию
         # self.top_level_item_type.setText(0, "Schema")
 
 
         # Устанавливаем необходимые функции для работы с базой
-        query_test_connection = postgresql.connect
-        query_load_databases = postgresql.all_databases
-        query_load_schemes = postgresql.all_schemas
-        query_load_tables = postgresql.all_tables
+        self.query_test_connection = postgresql.connect
+        self.query_load_databases = postgresql.all_databases
+        self.query_load_schemes = postgresql.all_schemas
+        self.query_load_tables = postgresql.all_tables
 
 
         # /\ ========================================= /\
@@ -48,14 +48,14 @@ class Settings(GroupAllSettings):
         # =================================================
 
         # Проверка соединения
-        self.btn_test_connect.clicked.connect(partial(self.test_connection, query_test_connection))
+        self.btn_test_connect.clicked.connect(partial(self.test_connection, self.query_test_connection))
 
 
         # Обработчики для дерева объектов
         self.tree_widget.itemDoubleClicked.connect(partial(self.load_children_for_parent,
-                                                           query_load_databases,
-                                                           query_load_schemes,
-                                                           query_load_tables))
+                                                           self.query_load_databases,
+                                                           self.query_load_schemes,
+                                                           self.query_load_tables))
 
 
         # Запуск дампа
@@ -72,21 +72,27 @@ class Settings(GroupAllSettings):
 
         custom_functions.set_cursor_style('wait')
         self.btn_run_creating_dump.setDisabled(True)
-        selected_items = self.get_checked_items_from_tree()
+        selected_items = self.get_checked_items_from_tree(self.top_level_item_type.text(0),
+                                                          self.query_load_databases,
+                                                          self.query_load_schemes,
+                                                          self.query_load_tables)
+        print(selected_items)
 
-        current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
-        list_of_selected_items = self.get_list_of_chacked_items(selected_items)
-        checked_radio = self.get_selected_type_of_dump().text()
-        list_of_cmd = get_list_of_cmd(self.dialect_name, current_connecting_settings,
-                                      list_of_selected_items, checked_radio, self.line_edit_selected_out_dir.text())
-
-        self.mythread = MyThread(self.dialect_name, list_of_cmd)
-        self.mythread.mysignal.connect(self.on_change_thread, QtCore.Qt.QueuedConnection)
-        self.mythread.finished.connect(self.finish_thread)
-
-        self.start_thread()
-
-        # self.btn_run_creating_dump.setDisabled(False)
+        # current_connecting_settings = self.settings[self.combo_box_list_profiles.currentText()]
+        # list_of_selected_items = self.get_list_of_chacked_items(selected_items)
+        # checked_radio = self.get_selected_type_of_dump().text()
+        # list_of_cmd = get_list_of_cmd(self.dialect_name, current_connecting_settings,
+        #                               list_of_selected_items, checked_radio, self.line_edit_selected_out_dir.text())
+        #
+        # self.mythread = MyThread(self.dialect_name, list_of_cmd)
+        # self.mythread.mysignal.connect(self.on_change_thread, QtCore.Qt.QueuedConnection)
+        # self.mythread.finished.connect(self.finish_thread)
+        #
+        # self.start_thread()
+        #
+        # # self.btn_run_creating_dump.setDisabled(False)
+        # custom_functions.set_cursor_style('normal')
+        self.btn_run_creating_dump.setDisabled(False)
         custom_functions.set_cursor_style('normal')
 
     def start_thread(self):
