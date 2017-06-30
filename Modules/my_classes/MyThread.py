@@ -19,7 +19,7 @@ class MyThread(QtCore.QThread):
 
     def run(self):
         for i in self.list_cmd:
-            self.sleep(2)
+            # self.sleep(2)
             self.object = i[0]
             self.cmd = i[1]
             print(self.cmd)
